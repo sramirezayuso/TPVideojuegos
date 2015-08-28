@@ -13,7 +13,8 @@ public abstract class Cam {
 	
 	public Cam(){
 		view=new Matrix4();
-		lookAtVector=new Vector3(new float[]{0f,0f,0f});
+		lookAtVector=new Vector3(new float[]{0f,0f,-1f});
+		camPosition=new Vector3(new float[]{0f,0f,0f});
 	}
 	
 	
@@ -41,9 +42,9 @@ P*V*T*R*S
 	public Matrix4 getMVP() {
 		Matrix4 p=this.getProjection();
 		Matrix4 v= LookAtRH(camPosition	, lookAtVector, up);
+		Matrix4 ans=p.mul(v);
 		
-		//return p.mul(v);
-		return new Matrix4();
+		return ans;
 	}
 
 	/*
@@ -51,9 +52,9 @@ P*V*T*R*S
 	 * http://www.3dgep.com/understanding-the-view-matrix/
 	 */
 	public Matrix4 LookAtRH( Vector3 eye, Vector3 target,Vector3 up ){
-		Vector3 zaxis = eye.sub(target).nor();    // The "forward" vector.
-		Vector3 xaxis = (up.crs(zaxis)).nor();// The "right" vector.
-		Vector3 yaxis = zaxis.crs( xaxis);     // The "up" vector.
+		Vector3 zaxis = new Vector3(eye).sub(target).nor();    // The "forward" vector.
+		Vector3 xaxis = (new Vector3(up).crs(zaxis)).nor();// The "right" vector.
+		Vector3 yaxis = new Vector3(zaxis).crs( xaxis);     // The "up" vector.
 	 
 	    // Create a 4x4 orientation matrix from the right, up, and forward vectors
 	    // This is transposed which is equivalent to performing an inverse 

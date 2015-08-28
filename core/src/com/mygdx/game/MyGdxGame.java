@@ -62,8 +62,8 @@ public class MyGdxGame extends ApplicationAdapter {
 																		// trabajar
 		//Intento de agregado de la camara aca abajo
 		Cam camera=new OrthographicCam();
-		Vector3 pos=new Vector3(new float[]{0f,1f,0f});
-		camera.setPosition(pos);
+		//Vector3 pos=new Vector3(new float[]{0f,1f,0f});
+		//camera.setPosition(pos);
 		//camera.lookAt(new Vector3(new float[]{1f,-1f,0f}));
 		Matrix4 worldView=camera.getMVP();
 		

@@ -6,10 +6,10 @@ public class OrthographicCam extends Cam {
 
 	@Override
 	protected Matrix4 getProjection() {
-		float width=1;
-		float height=1;
-		float z_far=1;
-		float z_near=0.1f;
+		float width=2;
+		float height=2;
+		float z_far=-1;
+		float z_near=1f;
 		
 		
 		Matrix4 ans=new Matrix4(new float[]{
@@ -21,11 +21,12 @@ public class OrthographicCam extends Cam {
 		
 		
 		//retorna matrix de prueba, en realidad deberia devolver ans;
-		return new Matrix4(new float[]{ 1,0,0,0,//primer col
+		Matrix4 aux= new Matrix4(new float[]{ 1,0,0,0,//primer col
 										0,1,0,0,
 										0,0,0,0,
 										0,0,0,1});
-									
+					
+		return ans;
 	}
 
 }
