@@ -61,17 +61,17 @@ public class MyGdxGame extends ApplicationAdapter {
 		//shaderProgram.setUniformMatrix("u_worldView", new Matrix4()); // aca
 																		// trabajar
 		//Intento de agregado de la camara aca abajo
-		Cam camera=new Cam();
+		Cam camera=new OrthographicCam();
 		Vector3 pos=new Vector3(new float[]{0f,1f,0f});
 		camera.setPosition(pos);
 		//camera.lookAt(new Vector3(new float[]{1f,-1f,0f}));
-		Matrix4 worldView=camera.getView();
-		//shaderProgram.setUniformMatrix("u_worldView", new Matrix4().rotate(new Vector3(new float[]{0f,1f,0f}), 45)); 
-		shaderProgram.setUniformMatrix("u_worldView",worldView);
-		//intento arriba
+		Matrix4 worldView=camera.getMVP();
 		
-	
-		shaderProgram.setUniformi("u_texture", 0);
+		
+		
+		
+		shaderProgram.setUniformMatrix("u_worldView",worldView);
+			shaderProgram.setUniformi("u_texture", 0);
 		spaceshipMesh.render(shaderProgram, GL20.GL_TRIANGLE_FAN);
 		shaderProgram.end();
 	}
