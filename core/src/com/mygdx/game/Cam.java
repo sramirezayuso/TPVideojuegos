@@ -10,7 +10,7 @@ public abstract class Cam implements InputProcessor {
 	Matrix4 view = new Matrix4();
 	private static final Vector3 up = new Vector3(new float[] { 0f, 1f, 0f });
 
-	private Vector3 lookAtVector;
+	protected Vector3 lookAtVector;
 
 	public Cam() {
 		view = new Matrix4();
@@ -92,4 +92,9 @@ public abstract class Cam implements InputProcessor {
 		return false;
 	}
 
+	@Override
+	public boolean keyUp(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

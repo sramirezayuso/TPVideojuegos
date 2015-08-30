@@ -42,14 +42,16 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		spaceshipMesh = new Mesh(true, data.meshes.get(0).vertices.length,
 				data.meshes.get(0).parts[0].indices.length,
-				VertexAttribute.Position(), VertexAttribute.TexCoords(0),
-				VertexAttribute.Normal());
+				VertexAttribute.Position(),
+				VertexAttribute.Normal(), VertexAttribute.TexCoords(0));
 		spaceshipMesh.setVertices(data.meshes.get(0).vertices);
 		spaceshipMesh.setIndices(data.meshes.get(0).parts[0].indices);
 		
 		//camara
 		camera=new OrthographicCam();
 		Gdx.input.setInputProcessor(camera);
+		Vector3 pos=new Vector3(new float[]{0f,0.3f,-0.5f});
+		camera.setPosition(pos);
 		
 	}
 
@@ -58,7 +60,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-	
+		
+		Gdx.gl.glDepthFunc(GL20.GL_LESS);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		
 		img.bind();
 		shaderProgram.begin();
 		//original 
@@ -66,8 +71,7 @@ public class MyGdxGame extends ApplicationAdapter {
 																		// trabajar
 		//Intento de agregado de la camara aca abajo
 		
-		//Vector3 pos=new Vector3(new float[]{0f,1f,0f});
-		//camera.setPosition(pos);
+		
 		//camera.lookAt(new Vector3(new float[]{1f,-1f,0f}));
 		Matrix4 worldView=camera.getMVP();
 		
@@ -76,7 +80,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		shaderProgram.setUniformMatrix("u_worldView",worldView);
 			shaderProgram.setUniformi("u_texture", 0);
-		spaceshipMesh.render(shaderProgram, GL20.GL_TRIANGLE_FAN);
+		spaceshipMesh.render(shaderProgram, GL20.GL_TRIANGLES);
 		shaderProgram.end();
 	}
 	

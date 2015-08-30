@@ -14,8 +14,8 @@ public class OrthographicCam extends Cam {
 	protected Matrix4 getProjection() {
 		float width = 2;
 		float height = 2;
-		float z_far = -1;
-		float z_near = 1f;
+		float z_far = 100;
+		float z_near = 0.1f;
 
 		Matrix4 ans = new Matrix4(new float[] { 1 / width, 0, 0, 0, 0,
 				1 / height, 0, 0, 0, 0, -2 / (z_far - z_near), 0, 0, 0,
@@ -37,21 +37,28 @@ public class OrthographicCam extends Cam {
 		float y_movement = 0;
 		float z_movement = 0;
 
+		Vector3 forwardVector = new Vector3(new Vector3(camPosition)	.sub(lookAtVector)).nor(); // The "forward" vector
+		System.out.println(forwardVector);
+		
+		Vector3 movementVector;
+		int currentDelta;
 		switch (keycode) {
 		case DOWN_KEY: {
-			z_movement=DELTA_KEY_PRESSED;
+			//z_movement=DELTA_KEY_PRESSED*forwardVector.mulAdd(vec, scalar);
+			movementVector=forwardVector;
+			
 			break;
 		}
 		case UP_KEY: {
-			z_movement=-DELTA_KEY_PRESSED;
+			z_movement=-DELTA_KEY_PRESSED*forwardVector.z;
 			break;
 		}
 		case LEFT_KEY: {
-			x_movement=-DELTA_KEY_PRESSED;
+			x_movement=-DELTA_KEY_PRESSED*forwardVector.x;
 			break;
 		}
 		case RIGHT_KEY: {
-			x_movement=DELTA_KEY_PRESSED;
+			x_movement=DELTA_KEY_PRESSED*forwardVector.x;
 			break;
 		}
 
@@ -64,12 +71,7 @@ public class OrthographicCam extends Cam {
 		return false;
 	}
 
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 	@Override
 	public boolean keyTyped(char character) {
 		// TODO Auto-generated method stub
