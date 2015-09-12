@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 public abstract class Cam implements InputProcessor {
 	Vector3 camPosition;
 	Matrix4 view = new Matrix4();
-	private static final Vector3 up = new Vector3(new float[] { 0f, 1f, 0f });
+	protected  Vector3 up = new Vector3(new float[] { 0f, 1f, 0f });
 
 	protected Vector3 lookAtVector;
 
@@ -41,7 +41,7 @@ public abstract class Cam implements InputProcessor {
 	/*
 	 * mvp representa la combinación (multiplicación) de P*V*T*R*S
 	 */
-	public Matrix4 getMVP() {
+	public Matrix4 getVP() {
 		Matrix4 p = this.getProjection();
 		Matrix4 v = LookAtRH(camPosition, lookAtVector, up);
 		Matrix4 ans = p.mul(v);

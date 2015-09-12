@@ -8,7 +8,7 @@ public class OrthographicCam extends Cam {
 	private static final int RIGHT_KEY = 22;
 	private static final int UP_KEY = 19;
 	private static final int DOWN_KEY = 20;
-	private static final float DELTA_KEY_PRESSED = 0.1F;
+	private static final float DELTA_KEY_PRESSED = 0.2F;
 
 	@Override
 	protected Matrix4 getProjection() {
@@ -38,6 +38,7 @@ public class OrthographicCam extends Cam {
 		float z_movement = 0;
 
 		Vector3 forwardVector = new Vector3(new Vector3(camPosition)	.sub(lookAtVector)).nor(); // The "forward" vector
+		Vector3 rightVector=new Vector3(new Vector3(up).crs(forwardVector));//normal(cross(up, zaxis));// The "right" vector.
 		System.out.println(forwardVector);
 		
 		Vector3 movementVector;
@@ -45,8 +46,8 @@ public class OrthographicCam extends Cam {
 		switch (keycode) {
 		case DOWN_KEY: {
 			//z_movement=DELTA_KEY_PRESSED*forwardVector.mulAdd(vec, scalar);
-			movementVector=forwardVector;
-			
+			//movementVector=forwardVector;
+			z_movement=DELTA_KEY_PRESSED*forwardVector.z;
 			break;
 		}
 		case UP_KEY: {
@@ -54,11 +55,11 @@ public class OrthographicCam extends Cam {
 			break;
 		}
 		case LEFT_KEY: {
-			x_movement=-DELTA_KEY_PRESSED*forwardVector.x;
+			x_movement=-DELTA_KEY_PRESSED*rightVector.x;
 			break;
 		}
 		case RIGHT_KEY: {
-			x_movement=DELTA_KEY_PRESSED*forwardVector.x;
+			x_movement=DELTA_KEY_PRESSED*rightVector.x;
 			break;
 		}
 
