@@ -1,16 +1,37 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 //es una camara ortografica
-public abstract class Cam implements InputProcessor {
+public class Cam implements InputProcessor {
 	Vector3 camPosition;
 	Matrix4 view = new Matrix4();
-	protected  Vector3 up = new Vector3(new float[] { 0f, 1f, 0f });
+	protected Vector3 up = new Vector3(new float[] { 0f, 1f, 0f });
 
 	protected Vector3 lookAtVector;
+
+	// mouse
+	private int last_x = Gdx.graphics.getWidth() / 2;
+	private int last_y = Gdx.graphics.getHeight() / 2;
+
+	private float x_rot = 0;
+	private float y_rot = 0;
+
+	private float pitch = 0;
+	private float yaw = 0;
+
+	// teclado
+	private static final int LEFT_KEY = 21;
+	private static final int RIGHT_KEY = 22;
+	private static final int UP_KEY = 19;
+	private static final int DOWN_KEY = 20;
+	private static final float DELTA_KEY_PRESSED = 0.25F;
+
+	//
 
 	public Cam() {
 		view = new Matrix4();
@@ -43,7 +64,12 @@ public abstract class Cam implements InputProcessor {
 	 */
 	public Matrix4 getVP() {
 		Matrix4 p = this.getProjection();
-		Matrix4 v = LookAtRH(camPosition, lookAtVector, up);
+		// Matrix4 v = LookAtRH(camPosition, lookAtVector, up);
+		// float pitch = x_rot / Gdx.graphics.getWidth();
+		// float yaw = y_rot / Gdx.graphics.getHeight();
+
+		Matrix4 v = FPSViewRH(camPosition, pitch, yaw);
+
 		Matrix4 ans = p.mul(v);
 
 		return ans;
@@ -73,22 +99,132 @@ public abstract class Cam implements InputProcessor {
 		// The eye position is negated which is equivalent
 		// to the inverse of the translation matrix.
 		// T(v)^-1 == T(-v)
-		Matrix4 translation = new Matrix4(new float[] { 1, 0, 0, 0,
-														0, 1, 0, 0,
-														0, 0, 1, 0,
-														-eye.x, -eye.y, -eye.z, 1 });
+		Matrix4 translation = new Matrix4(new float[] { 1, 0, 0, 0, 0, 1, 0, 0,
+				0, 0, 1, 0, -eye.x, -eye.y, -eye.z, 1 });
 
 		// Combine the orientation and translation to compute
 		// the final view matrix
 		return orientation.mul(translation);
 	}
 
-	protected abstract Matrix4 getProjection();
+	protected Matrix4 getProjection() {
+		return new Matrix4();
+	}
 
-	// MOVIMIENTO CON TECLADO
+	// MOVIMIENTO CON TECLADO,
 	@Override
 	public boolean keyDown(int keycode) {
 		System.out.println("tecla presionada:" + keycode);
+
+		
+
+		Vector3 forwardVector = new Vector3(
+				new Vector3(camPosition).add(lookAtVector));
+		System.out.println("--Forward antes"+ forwardVector);
+		
+		forwardVector.rotate(new Vector3(new float[] { 0f, 1f, 0f }), yaw)
+				.rotate(new Vector3(new float[] { 1f, 0f, 0f }), pitch).nor(); // The
+																			// "forward"
+		System.out.println("--Forward despues de rotar "+forwardVector);																	// vector
+
+		Vector3 rightVector = new Vector3(new Vector3(forwardVector).crs(up)).nor();
+
+		// normal(cross(up,
+		// zaxis));//
+		// The
+		// "right"
+		// vector.
+		System.out.println(forwardVector);
+
+		
+		Vector3 movementVector=new Vector3();
+		
+		
+		int currentDelta;
+		switch (keycode) {
+		case DOWN_KEY: {
+			//z_movement = -DELTA_KEY_PRESSED * forwardVector.z;
+			movementVector=new Vector3().mulAdd(forwardVector, -1);
+			break;
+		}
+		case UP_KEY: {
+			//z_movement = DELTA_KEY_PRESSED * forwardVector.z;
+			movementVector= forwardVector;
+			break;
+		}
+		case LEFT_KEY: {
+//			x_movement = -DELTA_KEY_PRESSED * rightVector.x;
+			movementVector=new Vector3().mulAdd(rightVector, -1);
+			break;
+		}
+		case RIGHT_KEY: {
+//			x_movement = DELTA_KEY_PRESSED * rightVector.x;
+			
+			movementVector=rightVector;
+			break;
+		}
+
+		}
+		float x_movement = movementVector.x*DELTA_KEY_PRESSED;
+		float y_movement = movementVector.y*DELTA_KEY_PRESSED;
+		float z_movement = movementVector.z*DELTA_KEY_PRESSED;
+		System.out.println("***right vector:"+ rightVector);
+		System.out.println("posicion inicial cam:" +this.camPosition);
+		Vector3 movement = new Vector3(new float[] { x_movement, y_movement,
+				z_movement });
+		getPosition().add(movement);
+		System.out.println("posicion final camara"+this.camPosition);
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/*
+	 * http://www.swiftless.com/tutorials/opengl/camera2.html
+	 */
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+//		System.out.println("mouse x:" + screenX + " y: " + screenY);
+
+		x_rot = last_x - screenX;
+		y_rot = last_y - screenY;
+		yaw += (x_rot / Gdx.graphics.getWidth()) * 180;
+		pitch += (y_rot / Gdx.graphics.getHeight()) * 180;
+		last_x = screenX;
+		last_y = screenY;
+		
+		if(pitch>0)
+			up.rotate(new Vector3(new float[]{1,0,0}), pitch);
+		//
+
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -96,5 +232,33 @@ public abstract class Cam implements InputProcessor {
 	public boolean keyUp(int keycode) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	// Pitch should be in the range of [-90 ... 90] degrees and yaw
+	// should be in the range of [0 ... 360] degrees.
+	Matrix4 FPSViewRH(Vector3 eye, float pitch, float yaw) {
+		// System.out.println("pitch:"+pitch+". yaw:"+yaw);
+		// If the pitch and yaw angles are in degrees,
+		// they need to be converted to radians. Here
+		// I assume the values are already converted to radians.
+		float cosPitch = (float) Math.cos(Math.toRadians(pitch));
+		float sinPitch = (float) Math.sin(Math.toRadians(pitch));
+		float cosYaw = (float) Math.cos(Math.toRadians(yaw));
+		float sinYaw = (float) Math.sin(Math.toRadians(yaw));
+
+		Vector3 xaxis = new Vector3(new float[] { cosYaw, 0, -sinYaw });
+		Vector3 yaxis = new Vector3(new float[] { sinYaw * sinPitch, cosPitch,
+				cosYaw * sinPitch });
+		Vector3 zaxis = new Vector3(new float[] { sinYaw * cosPitch, -sinPitch,
+				cosPitch * cosYaw });
+
+		// Create a 4x4 view matrix from the right, up, forward and eye position
+		// vectors
+		Matrix4 viewMatrix = new Matrix4(new float[] { xaxis.x, yaxis.x,
+				zaxis.x, 0, xaxis.y, yaxis.y, zaxis.y, 0, xaxis.z, yaxis.z,
+				zaxis.z, 0, -(xaxis.dot(eye)), -(yaxis.dot(eye)),
+				-(zaxis.dot(eye)), 1 });
+
+		return viewMatrix;
 	}
 }
