@@ -49,9 +49,14 @@ public class Ship {
 		Matrix4 modelMatrix = new Matrix4().translate(position);	
 		Matrix4 viewProjection = camera.getVP();
 		
-		modelMatrix.mul(viewProjection);
+		Matrix4 res = new Matrix4(modelMatrix);
+		res.mul(viewProjection);
+		
+		//modelMatrix.mul(viewProjection);
+		
+		
 
-		shader.setUniformMatrix("u_mvp", modelMatrix);
+		shader.setUniformMatrix("u_mvp", res);
 		shader.setUniformi("u_texture", 0);
 		
 		spaceshipMesh.render(shader, primitiveType);

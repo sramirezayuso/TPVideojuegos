@@ -2,8 +2,8 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 //es una camara ortografica
@@ -68,7 +68,9 @@ public class Cam implements InputProcessor {
 		// float pitch = x_rot / Gdx.graphics.getWidth();
 		// float yaw = y_rot / Gdx.graphics.getHeight();
 
-		Matrix4 v = FPSViewRH(camPosition, pitch, yaw);
+		Matrix4 v = this.getTR().inv(); 
+				
+				//FPSViewRH(camPosition, pitch, yaw);
 
 		Matrix4 ans = p.mul(v);
 
@@ -118,23 +120,30 @@ public class Cam implements InputProcessor {
 
 		
 
-		Vector3 forwardVector = new Vector3(
-				new Vector3(camPosition).add(lookAtVector));
-		System.out.println("--Forward antes"+ forwardVector);
+//		Vector3 forwardVector = new Vector3(
+//				new Vector3(camPosition).add(lookAtVector));
+//		System.out.println("--Forward antes"+ forwardVector);
+//		
+//		forwardVector.rotate(new Vector3(new float[] { 0f, 1f, 0f }), yaw)
+//				.rotate(new Vector3(new float[] { 1f, 0f, 0f }), pitch).nor(); // The
+//																			// "forward"
+//		System.out.println("--Forward despues de rotar "+forwardVector);																	// vector
+
+//		
+//		
+//		Vector3 rightVector = new Vector3(new Vector3(forwardVector).crs(up)).nor();
+
 		
-		forwardVector.rotate(new Vector3(new float[] { 0f, 1f, 0f }), yaw)
-				.rotate(new Vector3(new float[] { 1f, 0f, 0f }), pitch).nor(); // The
-																			// "forward"
-		System.out.println("--Forward despues de rotar "+forwardVector);																	// vector
-
-		Vector3 rightVector = new Vector3(new Vector3(forwardVector).crs(up)).nor();
-
+		
+		Vector3 forwardVector=getForward();
+		Vector3 rightVector=getRight();
 		// normal(cross(up,
 		// zaxis));//
 		// The
 		// "right"
 		// vector.
-		System.out.println(forwardVector);
+		System.out.println("///forward vector:"+forwardVector);
+		System.err.println("---right vector"+ rightVector);
 
 		
 		Vector3 movementVector=new Vector3();
@@ -144,12 +153,13 @@ public class Cam implements InputProcessor {
 		switch (keycode) {
 		case DOWN_KEY: {
 			//z_movement = -DELTA_KEY_PRESSED * forwardVector.z;
-			movementVector=new Vector3().mulAdd(forwardVector, -1);
+			movementVector= forwardVector;
 			break;
 		}
 		case UP_KEY: {
 			//z_movement = DELTA_KEY_PRESSED * forwardVector.z;
-			movementVector= forwardVector;
+			movementVector=new Vector3().mulAdd(forwardVector, -1);
+			
 			break;
 		}
 		case LEFT_KEY: {
@@ -168,7 +178,6 @@ public class Cam implements InputProcessor {
 		float x_movement = movementVector.x*DELTA_KEY_PRESSED;
 		float y_movement = movementVector.y*DELTA_KEY_PRESSED;
 		float z_movement = movementVector.z*DELTA_KEY_PRESSED;
-		System.out.println("***right vector:"+ rightVector);
 		System.out.println("posicion inicial cam:" +this.camPosition);
 		Vector3 movement = new Vector3(new float[] { x_movement, y_movement,
 				z_movement });
@@ -260,5 +269,51 @@ public class Cam implements InputProcessor {
 				-(zaxis.dot(eye)), 1 });
 
 		return viewMatrix;
+	}
+	
+	
+	public Matrix4 getT(){
+		return new Matrix4(new float[]{
+			1,0,0,camPosition.x,
+			0,1,0,camPosition.y,
+			0,0,1,camPosition.z,
+			0,0,0,1
+		}).tra();
+	}
+	
+	public Matrix4 getR(){
+		Matrix4 rx;
+		Matrix4 ry;
+		Matrix4 rz;
+		
+		
+		rx=new Matrix4(new float[]{
+				1,0,0,0,
+				0,(float) Math.cos(Math.toRadians(pitch)),(float) -Math.sin(Math.toRadians(pitch)),0,
+				0,(float) Math.sin(Math.toRadians(pitch)),(float) Math.cos(Math.toRadians(pitch)),0,
+				0,0,0,1
+		}).tra();
+		
+		ry=new Matrix4(new float[]{
+				(float) Math.cos(Math.toRadians(yaw)),0,(float) Math.sin(Math.toRadians(yaw)),0,
+				0,1,0,0,
+				(float) -Math.sin(Math.toRadians(yaw)),0,(float) Math.cos(Math.toRadians(yaw)),0,
+				0,0,0,1
+		}).tra();
+		rz=new Matrix4();
+		return rx.mul(ry).mul(rz);
+		
+	}
+	
+	public Matrix4 getTR(){
+		return getT().mul(getR());
+	}
+	
+	public Vector3 getForward(){
+		return new Vector3(new float[]{0,0,1}).mul(getR());
+	}
+	
+	public Vector3 getRight(){
+		return new Vector3(new float[]{1,0,0}).mul(getR());
 	}
 }
