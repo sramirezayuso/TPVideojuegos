@@ -5,12 +5,10 @@ import java.util.List;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.loaders.ModelLoader;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.models.Ship;
 
@@ -20,6 +18,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	ShaderProgram shaderProgram;
 
 	private Cam camera;
+	private InputMultiplexer multiplexer;
 	private Ship spaceShip1;
 	private Ship spaceShip2;
 	private List<Ship> objects=new ArrayList<Ship>();
@@ -38,11 +37,23 @@ public class MyGdxGame extends ApplicationAdapter {
 		objects.add(spaceShip1);
 		objects.add(spaceShip2);
 		// camara
-		camera = new OrthographicCam();
-		Gdx.input.setInputProcessor(camera);
-		Vector3 cam_pos = new Vector3(new float[] { 0f, 0f, 0.1f });
+		
+		
+		camera = new OrthographicCam(this);
+		multiplexer=new InputMultiplexer(camera);
+		Gdx.input.setInputProcessor(multiplexer);
+		Vector3 cam_pos = new Vector3(new float[] { 0f, 0f, 1f });
 		camera.setPosition(cam_pos);
 
+	}
+	
+	public void changeCamera(Cam cam){
+		if(cam!=null){
+			multiplexer.removeProcessor(cam);// se quita el listener para camara vieja
+			this.camera=cam;
+			multiplexer.addProcessor(cam);//agrega listener camara nueva
+		
+		}
 	}
 
 	@Override
