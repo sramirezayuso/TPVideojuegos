@@ -1,10 +1,11 @@
-package com.mygdx.game;
+package com.mygdx.game.cameras;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.MyGdxGame;
 
 //es una camara ortografica
 public class Cam implements InputProcessor {

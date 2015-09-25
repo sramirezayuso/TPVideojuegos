@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.cameras.Cam;
+import com.mygdx.game.cameras.OrthographicCam;
 import com.mygdx.game.models.Ship;
 
 public class MyGdxGame extends ApplicationAdapter {

@@ -1,8 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.cameras;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.MyGdxGame;
 
 public class OrthographicCam extends Cam {
 	

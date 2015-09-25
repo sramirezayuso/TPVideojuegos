@@ -1,6 +1,7 @@
-package com.mygdx.game;
+package com.mygdx.game.cameras;
 
 import com.badlogic.gdx.math.Matrix4;
+import com.mygdx.game.MyGdxGame;
 
 public class Perspective extends Cam {
 	private static final float FOVx=90f;//en grados
