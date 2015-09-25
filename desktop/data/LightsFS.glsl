@@ -33,7 +33,7 @@ void main() {
     float NdotH = max( dot( N, H ), 0 );
     vec4 Specular = pow( RdotV, MaterialShininess ) * LightColor * MaterialSpecular;
      
-gl_FragColor = ( Emissive + Ambient + Diffuse + Specular ) * texture2D(u_texture, v_texCoords);
+gl_FragColor = ( Emissive + Diffuse + Specular ) * texture2D(u_texture, v_texCoords);
 
 
 }

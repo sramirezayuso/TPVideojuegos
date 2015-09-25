@@ -59,7 +59,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	
 	private void activateLights() {
 		for(Light light:lights){
-			light.activate();
+//			light.activate();
 		}
 	}
 

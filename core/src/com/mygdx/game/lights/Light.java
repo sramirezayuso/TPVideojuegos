@@ -59,18 +59,18 @@ public class Light {
 		this.m_QuadraticAttenuation = m_QuadraticAttenuation;
 	}
 
-	public void activate() {
-		Gdx.gl20.glEnable(m_LightID);
-		Gdx.gl10.glLightfv(m_LightID, GL_AMBIENT, m_Ambient.x);
-		glLightfv(m_LightID, GL_DIFFUSE, m_Diffuse.x);
-		glLightfv(m_LightID, GL_SPECULAR, m_Specular.x);
-		glLightfv(m_LightID, GL_POSITION, m_Position.x);
-		glLightfv(m_LightID, GL_SPOT_DIRECTION, m_SpotDirection.x);
-		glLightf(m_LightID, GL_SPOT_EXPONENT, m_SpotExponent);
-		glLightf(m_LightID, GL_SPOT_CUTOFF, m_SpotCutoff);
-		glLightf(m_LightID, GL_CONSTANT_ATTENUATION, m_ConstantAttenuation);
-		glLightf(m_LightID, GL_LINEAR_ATTENUATION, m_LinearAttenuation);
-		glLightf(m_LightID, GL_QUADRATIC_ATTENUATION, m_QuadraticAttenuation);
-	}
+//	public void activate() {
+//		Gdx.gl20.glEnable(m_LightID);
+//		Gdx.gl10.glLightfv(m_LightID, GL_AMBIENT, m_Ambient.x);
+//		glLightfv(m_LightID, GL_DIFFUSE, m_Diffuse.x);
+//		glLightfv(m_LightID, GL_SPECULAR, m_Specular.x);
+//		glLightfv(m_LightID, GL_POSITION, m_Position.x);
+//		glLightfv(m_LightID, GL_SPOT_DIRECTION, m_SpotDirection.x);
+//		glLightf(m_LightID, GL_SPOT_EXPONENT, m_SpotExponent);
+//		glLightf(m_LightID, GL_SPOT_CUTOFF, m_SpotCutoff);
+//		glLightf(m_LightID, GL_CONSTANT_ATTENUATION, m_ConstantAttenuation);
+//		glLightf(m_LightID, GL_LINEAR_ATTENUATION, m_LinearAttenuation);
+//		glLightf(m_LightID, GL_QUADRATIC_ATTENUATION, m_QuadraticAttenuation);
+//	}
 
 }
