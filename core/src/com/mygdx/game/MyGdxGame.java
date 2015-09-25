@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.cameras.Cam;
 import com.mygdx.game.cameras.OrthographicCam;
+import com.mygdx.game.lights.DirectionaLight;
+import com.mygdx.game.lights.Light;
 import com.mygdx.game.models.Ship;
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -24,6 +26,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Ship spaceShip1;
 	private Ship spaceShip2;
 	private List<Ship> objects=new ArrayList<Ship>();
+	private List<Light> lights=new ArrayList<Light>();
 	@Override
 	public void create() {
 		String vs = Gdx.files.internal(dataFolder + "LightsVS.glsl")
@@ -46,6 +49,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(multiplexer);
 		Vector3 cam_pos = new Vector3(new float[] { 0f, 0f, 1f });
 		camera.setPosition(cam_pos);
+		lights.add(new DirectionaLight());
+		
 
 	}
 	

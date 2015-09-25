@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.cameras.Cam;
 
-public class Ship {
+public class Ship extends Model{
 	static Mesh spaceshipMesh;
 	static Texture img;
 	public static String dataFolder = null;
