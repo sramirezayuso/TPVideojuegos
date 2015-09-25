@@ -16,7 +16,26 @@ uniform vec4 MaterialSpecular;
 uniform float MaterialShininess; 
 
 void main() {
-    gl_FragColor = v_color * texture2D(u_texture, v_texCoords);
+	// Compute the emissive term.
+    vec4 Emissive = MaterialEmissive;
+ 
+    // Compute the diffuse term.
+    vec4 N = normalize( v2f_normalW );
+    vec4 L = normalize( LightPosW - v2f_positionW );
+    float NdotL = max( dot( N, L ), 0 );
+    vec4 Diffuse =  NdotL * LightColor * MaterialDiffuse;
+     
+    // Compute the specular term.
+    vec4 V = normalize( EyePosW - v2f_positionW );
+    vec4 H = normalize( L + V );
+    vec4 R = reflect( -L, N );
+    float RdotV = max( dot( R, V ), 0 );
+    float NdotH = max( dot( N, H ), 0 );
+    vec4 Specular = pow( RdotV, MaterialShininess ) * LightColor * MaterialSpecular;
+     
+gl_FragColor = ( Emissive + Ambient + Diffuse + Specular ) * texture2D(u_texture, v_texCoords);
+
+
 }
 
 
