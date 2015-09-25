@@ -64,7 +64,7 @@ public class Ship extends Model{
 		
 		//iluminacion
 		Vector3 normal=new Vector3(new float[]{0f,1f,0f});//OJO, NO SE TIENE LA NORMAL
-		shader.setUniformf("in_normal",normal);
+		//shader.setUniformf("in_normal",normal);
 		shader.setUniformf("EyePosW",camera.getPosition());
 		material.setParameters(shader);
 		
