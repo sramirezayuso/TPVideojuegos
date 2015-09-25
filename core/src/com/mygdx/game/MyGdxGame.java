@@ -50,7 +50,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(multiplexer);
 		Vector3 cam_pos = new Vector3(new float[] { 0f, 0f, 1f });
 		camera.setPosition(cam_pos);
-		lights.add(new PointLight());
+		lights.add(new PointLight(new Vector3(new float[] { 0f, 0f, 1f })));
 		
 		activateLights();
 		
