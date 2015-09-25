@@ -17,7 +17,10 @@ public class Ship extends Model{
 	static Texture img;
 	public static String dataFolder = null;
 	private Vector3 position;
+	
+	
 	public Ship(String dataFolder,Vector3 position) {
+		super(new MetallicMaterial());
 		this.dataFolder = dataFolder;
 		loadImg();
 		loadMesh();
@@ -59,6 +62,13 @@ public class Ship extends Model{
 		shader.setUniformMatrix("u_mvp", res);
 		shader.setUniformi("u_texture", 0);
 		
+		//iluminacion
+		Vector3 normal=null;//OJO, NO SE TIENE LA NORMAL
+		shader.setUniformf("in_normal",normal);
+		shader.setUniformf("EyePosW",camera.getPosition());
+		material.setParameters(shader);
+		
+		//
 		spaceshipMesh.render(shader, primitiveType);
 
 		// usar aca el bind de la textura, no esta bien que este suelto

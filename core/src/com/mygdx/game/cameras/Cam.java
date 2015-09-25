@@ -59,7 +59,7 @@ public class Cam implements InputProcessor {
 		camPosition = vec;
 	}
 
-	protected Vector3 getPosition() {
+	public Vector3 getPosition() {
 		return camPosition;
 	}
 

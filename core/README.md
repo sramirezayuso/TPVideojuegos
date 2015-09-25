@@ -107,4 +107,12 @@ Las variables que "tiene" el vertex shader se las pasas cuando haces : program.s
 En el vertex shader, hay variables "Uniform", variables "attribute" para el archivo de puntos ".obj", y variables "varying" para materiales.
 Para las luces solo te importa "varying", no el otro.
  
+ --------------------
+ 25/9
+ 
+ *MetallicMaterial no esta realmente configurado para metal, REVISAR
+ *¿Vector normal al vertice???
+ 
+ 
+ 
 
