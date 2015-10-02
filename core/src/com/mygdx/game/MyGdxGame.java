@@ -35,6 +35,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		String fs = Gdx.files.internal(dataFolder + "LightsFS.glsl")
 				.readString();
 		shaderProgram = new ShaderProgram(vs, fs);
+		shaderProgram.pedantic = false;
 		System.out.println(shaderProgram.getLog());
 //		ModelLoader<?> loader = new ObjLoader();
 
@@ -50,18 +51,15 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(multiplexer);
 		Vector3 cam_pos = new Vector3(new float[] { 0f, 0f, 1f });
 		camera.setPosition(cam_pos);
-		lights.add(new PointLight(new Vector3(new float[] { 0f, 0f, 1f })));
+		lights.add(new PointLight(
+				new Vector3(new float[] { 0f, 1f, 0.1f }),
+				new Vector3(new float[] { 0f, 1f, 0f })
+				));
 		
-		activateLights();
 		
 
 	}
 	
-	private void activateLights() {
-		for(Light light:lights){
-//			light.activate();
-		}
-	}
 
 	public void changeCamera(Cam cam){
 		if(cam!=null){
@@ -98,6 +96,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		
 		shaderProgram.end();
+		String shader_log=shaderProgram.getLog();
+		if(shader_log.length()>0)
+		System.out.println(shader_log);
 	}
 
 }

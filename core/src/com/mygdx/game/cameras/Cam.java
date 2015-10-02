@@ -331,8 +331,14 @@ public class Cam implements InputProcessor {
 	
 	//setea los parametros necesarios para renderear iluminacion
 	public void setParameters(ShaderProgram shader) {
+		shader.setUniform3fv("EyePosW3", 
+				vect3TofloatArray(this.getPosition()), 0, 3);
+		//shader.setUniformf("EyePosW3", this.getPosition());
 		
-		shader.setUniformf("EyePosW", this.getPosition());
-		
+	}
+	
+	
+	private float[] vect3TofloatArray(Vector3 vect){
+		return new float[]{vect.x,vect.y,vect.z};
 	}
 }

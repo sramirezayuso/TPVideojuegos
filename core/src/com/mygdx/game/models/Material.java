@@ -21,9 +21,9 @@ public class Material {
 	}
 
 	public void setParameters(ShaderProgram shader) {
-		shader.setUniformf("MaterialEmissive",m_Emission);
-		shader.setUniformf("MaterialDiffuse",m_Diffuse);
-		shader.setUniformf("MaterialSpecular",m_Specular);
+		shader.setUniformf("MaterialEmissive_3",m_Emission);
+		shader.setUniformf("MaterialDiffuse_3",m_Diffuse);
+		shader.setUniformf("MaterialSpecular_3",m_Specular);
 		shader.setUniformf("MaterialShininess", m_Shininess);;
 	}
 

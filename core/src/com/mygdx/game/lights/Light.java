@@ -2,6 +2,7 @@ package com.mygdx.game.lights;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 
 public class Light {
@@ -40,11 +41,13 @@ public class Light {
 	float m_LinearAttenuation;
 	float m_QuadraticAttenuation;
 
+	Vector3 m_light_color;
+	
 	public Light(int m_LightID, Vector3 m_Ambient, Vector3 m_Diffuse,
 			Vector3 m_Specular, Vector3 m_Position, Vector3 m_SpotDirection,
 			float m_SpotExponent, float m_SpotCutoff,
 			float m_ConstantAttenuation, float m_LinearAttenuation,
-			float m_QuadraticAttenuation) {
+			float m_QuadraticAttenuation,Vector3 m_light_color) {
 		super();
 		this.m_LightID = m_LightID;
 		this.m_Ambient = m_Ambient;
@@ -57,6 +60,15 @@ public class Light {
 		this.m_ConstantAttenuation = m_ConstantAttenuation;
 		this.m_LinearAttenuation = m_LinearAttenuation;
 		this.m_QuadraticAttenuation = m_QuadraticAttenuation;
+		this.m_light_color=m_light_color;
+	}
+
+	public void setParameters(ShaderProgram shader) {
+		
+		shader.setUniformf("LightPosW_3",m_Position );
+		
+		shader.setUniformf("LightColor_3",m_light_color );
+		
 	}
 	
 	

@@ -15,19 +15,18 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.cameras.Cam;
 import com.mygdx.game.lights.Light;
 
-public class Ship extends Model{
+public class Ship extends Model {
 	static Mesh spaceshipMesh;
 	static Texture img;
 	public static String dataFolder = null;
 	private Vector3 position;
-	
-	
-	public Ship(String dataFolder,Vector3 position) {
+
+	public Ship(String dataFolder, Vector3 position) {
 		super(new MetallicMaterial());
 		this.dataFolder = dataFolder;
 		loadImg();
 		loadMesh();
-		this.position=position;
+		this.position = position;
 	}
 
 	private static void loadMesh() {
@@ -44,34 +43,36 @@ public class Ship extends Model{
 		}
 	}
 
-	private static void loadImg(){
-		if(img==null)
+	private static void loadImg() {
+		if (img == null)
 			img = new Texture(dataFolder + "ship.png");
-			
+
 	}
-	
-	public void render(ShaderProgram shader, List<Light> lights, Cam camera, int primitiveType) {
-		
-		Matrix4 modelMatrix = new Matrix4().translate(position);	
+
+	public void render(ShaderProgram shader, List<Light> lights, Cam camera,
+			int primitiveType) {
+
+		Matrix4 modelMatrix = new Matrix4().translate(position);
 		Matrix4 viewProjection = camera.getVP();
-		
+
 		Matrix4 res = new Matrix4(modelMatrix);
 		res.mul(viewProjection);
 		camera.setParameters(shader);
-		//modelMatrix.mul(viewProjection);
-		
-		
+		// modelMatrix.mul(viewProjection);
 
 		shader.setUniformMatrix("u_mvp", res);
 		shader.setUniformi("u_texture", 0);
-		//iluminacion
-		//shader.setUniformf("in_normal",normal);
+
+		// iluminacion
+		// shader.setUniformf("in_normal",normal);
 		material.setParameters(shader);
 		camera.setParameters(shader);
-		
-		//
-		spaceshipMesh.render(shader, primitiveType);
 
+		// //iluminacion, se hace una pasada por cada luz
+		for (Light light : lights) {
+			light.setParameters(shader);
+			spaceshipMesh.render(shader, primitiveType);
+		}
 		// usar aca el bind de la textura, no esta bien que este suelto
 		this.bind();
 	}
