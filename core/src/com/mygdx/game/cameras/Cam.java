@@ -2,6 +2,7 @@ package com.mygdx.game.cameras;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -325,5 +326,13 @@ public class Cam implements InputProcessor {
 
 	public Vector3 getRight() {
 		return new Vector3(new float[] { 1, 0, 0 }).mul(getR());
+	}
+
+	
+	//setea los parametros necesarios para renderear iluminacion
+	public void setParameters(ShaderProgram shader) {
+		
+		shader.setUniformf("EyePosW", this.getPosition());
+		
 	}
 }

@@ -94,7 +94,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		//spaceshipMesh.render(shaderProgram, GL20.GL_TRIANGLES);
 		//spaceShip.render(shaderProgram,  GL20.GL_TRIANGLES);
 		for(Ship ship:objects){
-			ship.render(shaderProgram, camera, GL20.GL_TRIANGLES);
+			ship.render(shaderProgram,lights, camera, GL20.GL_TRIANGLES);
 		}
 		
 		shaderProgram.end();

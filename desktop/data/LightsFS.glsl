@@ -5,7 +5,7 @@ uniform sampler2D u_texture;
 //iluminacion
 varying vec4 v2f_normalW; 
 varying vec4 v2f_positionW;
-uniform vec4 EyePosW;   // Eye position in world space.
+uniform vec3 EyePosW;   // Eye position in world space.
 uniform vec4 LightPosW; // Light's position in world space.
 uniform vec4 LightColor; // Light's diffuse and specular contribution.
  
@@ -16,6 +16,9 @@ uniform vec4 MaterialSpecular;
 uniform float MaterialShininess; 
 
 void main() {
+vec4 EyePosW4=vec4(EyePosW,1);
+
+
 	// Compute the emissive term.
     vec4 Emissive = MaterialEmissive;
  
@@ -26,15 +29,15 @@ void main() {
     vec4 Diffuse =  NdotL * LightColor * MaterialDiffuse;
      
     // Compute the specular term.
-    vec4 V = normalize( EyePosW - v2f_positionW );
-    vec4 H = normalize( L + V );
+    vec3 V = normalize( EyePosW4 - v2f_positionW.xyz );
+    vec3 H = normalize( L + V );
     vec4 R = reflect( -L, N );
     float RdotV = max( dot( R, V ), 0 );
     float NdotH = max( dot( N, H ), 0 );
     vec4 Specular = pow( RdotV, MaterialShininess ) * LightColor * MaterialSpecular;
      
-gl_FragColor = ( Emissive + Diffuse + Specular ) * texture2D(u_texture, v_texCoords);
-
+//gl_FragColor = ( Emissive + Diffuse + Specular ) * texture2D(u_texture, v_texCoords);
+gl_FragColor =v_color * texture2D(u_texture, v_texCoords);
 
 }
 

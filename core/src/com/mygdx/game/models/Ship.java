@@ -1,5 +1,7 @@
 package com.mygdx.game.models;
 
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.ModelLoader;
 import com.badlogic.gdx.graphics.Mesh;
@@ -11,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.cameras.Cam;
+import com.mygdx.game.lights.Light;
 
 public class Ship extends Model{
 	static Mesh spaceshipMesh;
@@ -47,26 +50,24 @@ public class Ship extends Model{
 			
 	}
 	
-	public void render(ShaderProgram shader, Cam camera, int primitiveType) {
+	public void render(ShaderProgram shader, List<Light> lights, Cam camera, int primitiveType) {
 		
 		Matrix4 modelMatrix = new Matrix4().translate(position);	
 		Matrix4 viewProjection = camera.getVP();
 		
 		Matrix4 res = new Matrix4(modelMatrix);
 		res.mul(viewProjection);
-		
+		camera.setParameters(shader);
 		//modelMatrix.mul(viewProjection);
 		
 		
 
 		shader.setUniformMatrix("u_mvp", res);
 		shader.setUniformi("u_texture", 0);
-		
 		//iluminacion
-		Vector3 normal=new Vector3(new float[]{0f,1f,0f});//OJO, NO SE TIENE LA NORMAL
 		//shader.setUniformf("in_normal",normal);
-		shader.setUniformf("EyePosW",camera.getPosition());
 		material.setParameters(shader);
+		camera.setParameters(shader);
 		
 		//
 		spaceshipMesh.render(shader, primitiveType);
