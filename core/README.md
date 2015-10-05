@@ -113,6 +113,13 @@ Para las luces solo te importa "varying", no el otro.
  *MetallicMaterial no esta realmente configurado para metal, REVISAR
  *¿Vector normal al vertice???
  
+ -------------------
+ 
+ 2/10
+ *¿Como levantar propiedades de material del archivo *.mtl?no hace falta
+ *¿Que ocurre cuando hay múltiples texturas? ¿Se cargan igual que como el caso de una unica imagen de la nave? no lo hagas, hace cosas con una sola textura
+ *animaciones: no en obj, exportarla en 3dg (ver libgdx animations and skinning).
+ *gdbugger: para debugger.
  
  
 

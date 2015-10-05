@@ -59,7 +59,7 @@ public class Ship extends Model {
 		res.mul(viewProjection);
 		camera.setParameters(shader);
 		// modelMatrix.mul(viewProjection);
-
+		img.bind();
 		shader.setUniformMatrix("u_mvp", res);
 		shader.setUniformi("u_texture", 0);
 
@@ -73,12 +73,6 @@ public class Ship extends Model {
 			light.setParameters(shader);
 			spaceshipMesh.render(shader, primitiveType);
 		}
-		// usar aca el bind de la textura, no esta bien que este suelto
-		this.bind();
 	}
 
-	void bind() {
-		img.bind();
-
-	}
 }

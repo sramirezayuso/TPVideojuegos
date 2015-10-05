@@ -1,11 +1,13 @@
 package com.mygdx.game.cameras;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Matrix4;
 import com.mygdx.game.MyGdxGame;
-
+//Gdx.graphics.getWidth()
 public class Perspective extends Cam {
-	private static final float FOVx=90f;//en grados
-	private static final float FOVy=90f;//en grados
+	
+	private static final float FOVy = 60.0f;
+	private static float FOVx = FOVy * Gdx.graphics.getWidth()/Gdx.graphics.getHeight();
 	
 	public Perspective(MyGdxGame app) {
 		super(app);
@@ -13,9 +15,12 @@ public class Perspective extends Cam {
 	}
 	@Override
 	protected Matrix4 getProjection() {
+		
+		
+		
 		Matrix4 ans = new Matrix4(new float[] {
-				(float) Math.atan(Math.toRadians(FOVx)/2),0,0,0,
-				0,(float) Math.atan(Math.toRadians(FOVy)/2),0,0,
+				1f/((float) Math.tan(Math.toRadians(FOVx) * 0.5f)),0,0,0,
+				0,1f/((float) Math.tan(Math.toRadians(FOVy) * 0.5f	)),0,0,
 				0,0,-(z_far+z_near)/(z_far-z_near),-1,
 				0,0,-(2*z_far*z_near)/(z_far-z_near),0
 		});
