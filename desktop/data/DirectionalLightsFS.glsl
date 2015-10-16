@@ -45,10 +45,10 @@ vec4 MaterialSpecular=vec4(MaterialSpecular_3,1);
     vec4 Specular = pow( RdotV, MaterialShininess ) * LightColor * MaterialSpecular;
 
 
-// de los glcolor, el primero es con luces, el segund sin luces, el tercero es prueba  
-//gl_FragColor = ( Emissive + Diffuse + Specular ) * texture2D(u_texture, v_texCoords);
-//gl_FragColor =v_color * texture2D(u_texture, v_texCoords);
+
 gl_FragColor = ( Emissive + Diffuse + Specular ) * texture2D(u_texture, v_texCoords);
+
+
 }
 
 
