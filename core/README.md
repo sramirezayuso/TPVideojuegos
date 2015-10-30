@@ -37,8 +37,6 @@ Es la formula copiada de la pagina recomendada(http://www.3dgep.com/understandin
 cuando moves mouse, tocas yaw pitch roll. Se podifica si o si a donde miras en funcion de esos angulos
 
 
-
-
 __________________________________
 4/8/2015
 
@@ -122,4 +120,7 @@ Para las luces solo te importa "varying", no el otro.
  *gdbugger: para debugger.
  
  
-
+Animacion 
+----
+http://www.gamefromscratch.com/post/2014/02/14/No-bones-about-it-Bones-in-LibGDX-and-Blender.aspx
+http://mmmovania.blogspot.com.ar/2012/11/skeletal-animation-and-gpu-skinning.html
