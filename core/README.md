@@ -124,3 +124,7 @@ Animacion
 ----
 http://www.gamefromscratch.com/post/2014/02/14/No-bones-about-it-Bones-in-LibGDX-and-Blender.aspx
 http://mmmovania.blogspot.com.ar/2012/11/skeletal-animation-and-gpu-skinning.html
+http://dagger.se/?p=71
+
+
+Para comprobar la spotlight, poner un plano para ver el circulo. Segun jorge, hay algo raro.

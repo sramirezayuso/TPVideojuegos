@@ -1,6 +1,7 @@
 varying vec4 v_color; 
 varying vec2 v_texCoords;
 uniform sampler2D u_texture;
+uniform mat4 u_mvp;
 
 //iluminacion
 varying vec4 v2f_normalW; 
@@ -9,13 +10,15 @@ uniform vec3 EyePosW3;   // Eye position in world space.
 uniform vec3 LightPosW_3; // Light's position in world space.
 uniform vec3 LightColor_3; // Light's diffuse and specular contribution.
 uniform vec3 spotlightDirection_3;
-uniform vec3 l_spotCutOff; 
+uniform float l_spotCutOff; 
 
 uniform vec3 MaterialEmissive_3;
 uniform vec3 MaterialDiffuse_3;
 uniform vec3 MaterialSpecular_3;
 uniform float MaterialShininess; 
 
+
+varying vec3 lightDir_3;
 void main() {
 
 
@@ -30,32 +33,41 @@ vec4 MaterialSpecular=vec4(MaterialSpecular_3,1);
 	
 //http://www.lighthouse3d.com/tutorials/glsl-tutorial/spotlights/
 
-vec3 lightDir_3 = vec3(l_pos - pos);//vector desde la luz hasta el vertice en cuestion
+	vec3 lightDir_3 = vec3(LightPosW.xyz - v2f_positionW.xyz);//vector desde la luz hasta el fragmento en cuestion
 
 
-float intensity = 0.0;
+	float intensity = 0.0;
     vec4 spec = vec4(0.0);
  
     vec3 ld = normalize(lightDir_3);
     vec3 sd = normalize(vec3(-spotlightDirection_3));  
  
     // inside the cone?
-    if (dot(sd,ld) > l_spotCutOff) {
- 
+    if ( dot(sd,ld) > l_spotCutOff) {
+  	//if ( dot(sd,ld) == 0.0) {
+  	
+  	
+  	
         vec3 n = normalize(v2f_normalW.xyz);
-        intensity = max(dot(n,ld), 0.0f);
+        intensity = max(dot(n,ld), 0.0);
  
-        if (intensity > 0.0f) {
+        if (intensity > 0.0) {
             vec3 eye = normalize(EyePosW3);
             vec3 h = normalize(ld + eye);
             float intSpec = max(dot(h,n), 0.0);
             spec = MaterialSpecular * pow(intSpec, MaterialShininess);
         }
+        //intensity=1.0;
     }
  
     
+    //el primero es el correcto, el de abajo es de prueba
+    //gl_FragColor = (intensity * MaterialDiffuse + MaterialSpecular) * texture2D(u_texture, v_texCoords);
+    gl_FragColor = intensity * texture2D(u_texture, v_texCoords);
     
-    gl_FragColor = (intensity * MaterialDiffuse_3 + MaterialSpecular_3) * texture2D(u_texture, v_texCoords);
+   
+    
+    //gl_FragColor = vec4(sd, 1.0);
 }
 
 

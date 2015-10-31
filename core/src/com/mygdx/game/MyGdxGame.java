@@ -60,9 +60,9 @@ public class MyGdxGame extends ApplicationAdapter {
 //		
 		lights.add(new SpotLight(
 				
-				new Vector3(new float[] { 0f, 0f, 0.1f })
-				, new Vector3(new float[] { 1f, 0f, 0f })
-				));
+				new Vector3(new float[] { 6f, 10f, 0.2f })
+				, new Vector3(new float[] { 1f, 1f, 1f })
+				,new Vector3(new float[]{ 0.0f, -0.1f, 0.0f})));
 	}
 	
 
@@ -83,7 +83,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		Gdx.gl.glDepthFunc(GL20.GL_LESS);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-
+		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		
 		shaderProgram.begin();
 		// original
