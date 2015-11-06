@@ -128,3 +128,8 @@ http://dagger.se/?p=71
 
 
 Para comprobar la spotlight, poner un plano para ver el circulo. Segun jorge, hay algo raro.
+
+6/11
+----
+En la pointlight hay como luz ambiente, la luz en si no se ve del color que deberia.
+

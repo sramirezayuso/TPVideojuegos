@@ -27,6 +27,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	
 	ShaderProgram spot_light_shaderProgram;
 	ShaderProgram point_light_shaderProgram;
+	
+	ShaderProgram character_shader;
 	private Cam camera;
 	private InputMultiplexer multiplexer;
 	private Ship spaceShip1;
@@ -52,7 +54,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		spot_light_shaderProgram=createShader(dataFolder,"SpotLightVS.glsl","SpotLightsFS.glsl");
 		
 		point_light_shaderProgram=createShader(dataFolder,"PointLightsVS.glsl","PointLightsFS.glsl");
-		
+		//character_shader=createShader(dataFolder, "characterVS.glsl", "defaultFS.glsl");
 		shaders.add(spot_light_shaderProgram);
 		shaders.add(point_light_shaderProgram);
 		
@@ -75,13 +77,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		lights.add(new PointLight(point_light_shaderProgram,
 				new Vector3(new float[] { 0f, 1f, 0.1f }),
-				new Vector3(new float[] { 0f, 1f, 0f })
+				new Vector3(new float[] { 1f, 0f, 0f })
 				));
 		
-//		lights.add(new SpotLight(spot_light_shaderProgram,			
-//				new Vector3(new float[] { 3f, 5f, 0.2f })
-//				, new Vector3(new float[] { 1f, 1f, 1f })
-//				,new Vector3(new float[]{ 0.0f, -0.1f, 0.0f})));
+		lights.add(new SpotLight(spot_light_shaderProgram,			
+				new Vector3(new float[] { 6f, 10f, 0.2f })
+				, new Vector3(new float[] { 0f, 1f, 0f })
+				,new Vector3(new float[]{ 0.0f, -0.1f, 0.0f})));
 	}
 	
 
@@ -117,21 +119,22 @@ public class MyGdxGame extends ApplicationAdapter {
 		//spaceshipMesh.render(shaderProgram, GL20.GL_TRIANGLES);
 		//spaceShip.render(shaderProgram,  GL20.GL_TRIANGLES);
 		
-		for(Light light:lights){
-			ShaderProgram currentShader=light.getShader();
-			currentShader.begin();
+		
 			for(Model model:objects){
-				model.render(currentShader,lights, camera, GL20.GL_TRIANGLES);
+				model.render(lights, camera, GL20.GL_TRIANGLES);
 			}
-			currentShader.end();
-				
-		}
+			
 		
 		//spot_light_shaderProgram.end();
 		//point_light_shaderProgram.end();
 		String shader_log=spot_light_shaderProgram.getLog();
 		if(shader_log.length()>0)
 		System.out.println(shader_log);
+		
+		
+		String shader_log2=point_light_shaderProgram.getLog();
+		if(shader_log2.length()>0)
+		System.out.println(shader_log2);
 	}
 
 }

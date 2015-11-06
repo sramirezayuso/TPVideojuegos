@@ -29,33 +29,36 @@ public abstract class Model {
 
 	}
 
-	public void render(ShaderProgram shader, List<Light> lights, Cam camera,
-			int primitiveType) {
-
-		Mesh mesh = getMesh();
-		Texture texture = getTexture();
-
-		Matrix4 modelMatrix = new Matrix4().translate(position);
-		Matrix4 viewProjection = camera.getVP();
-
-		Matrix4 res = new Matrix4(modelMatrix);
-		res.mul(viewProjection);
-		camera.setParameters(shader);
-		// modelMatrix.mul(viewProjection);
-		if (texture != null)
-			texture.bind();
-		shader.setUniformMatrix("u_mvp", res);
-		shader.setUniformi("u_texture", 0);
-
-		// iluminacion
-		// shader.setUniformf("in_normal",normal);
-		material.setParameters(shader);
-		camera.setParameters(shader);
+	public void render(List<Light> lights, Cam camera, int primitiveType) {
 
 		// //iluminacion, se hace una pasada por cada luz
 		for (Light light : lights) {
-			light.setParameters(shader);
+			ShaderProgram shader = light.getShader();
+			shader.begin();
+			light.setParameters();
+			
+			Mesh mesh = getMesh();
+			Texture texture = getTexture();
+
+			Matrix4 modelMatrix = new Matrix4().translate(position);
+			Matrix4 viewProjection = camera.getVP();
+
+			Matrix4 res = new Matrix4(modelMatrix);
+			res.mul(viewProjection);
+			camera.setParameters(shader);
+			// modelMatrix.mul(viewProjection);
+			if (texture != null)
+				texture.bind();
+			shader.setUniformMatrix("u_mvp", res);
+			shader.setUniformi("u_texture", 0);
+
+			// iluminacion
+			// shader.setUniformf("in_normal",normal);
+			material.setParameters(shader);
+			camera.setParameters(shader);
+
 			mesh.render(shader, primitiveType);
+			shader.end();
 		}
 	}
 

@@ -41,7 +41,7 @@ public class Light {
 	float m_QuadraticAttenuation;
 
 	Vector3 m_light_color;
-	private ShaderProgram shader;
+	protected ShaderProgram shader;
 	public Light(ShaderProgram shader,int m_LightID, Vector3 m_Ambient, Vector3 m_Diffuse,
 			Vector3 m_Specular, Vector3 m_Position, Vector3 m_SpotDirection,
 			float m_SpotExponent, float m_SpotCutoff,
@@ -63,7 +63,7 @@ public class Light {
 		this.m_light_color=m_light_color;
 	}
 
-	public void setParameters(ShaderProgram shader) {
+	public void setParameters() {
 		
 		shader.setUniformf("LightPosW_3",m_Position );
 		

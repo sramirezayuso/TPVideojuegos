@@ -26,8 +26,10 @@ public class SpotLight extends Light {
     			}
 	
 	@Override
-	public void setParameters(ShaderProgram shader) {
-		super.setParameters(shader);
+	public void setParameters() {
+		super.setParameters();
+		
+		
 		shader.setUniformf("l_spotCutOff",m_SpotCutoff);
 		shader.setUniformf("spotlightDirection_3",m_SpotDirection );
 		

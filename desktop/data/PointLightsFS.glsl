@@ -1,3 +1,5 @@
+//http://www.3dgep.com/texturing-and-lighting-with-opengl-and-glsl/
+
 varying vec4 v_color; 
 varying vec2 v_texCoords;
 uniform sampler2D u_texture;
@@ -29,7 +31,7 @@ vec4 MaterialSpecular=vec4(MaterialSpecular_3,1);
 	
 	// Compute the emissive term.
     vec4 Emissive = MaterialEmissive;
- 
+ 	
     // Compute the diffuse term.
     vec4 N = normalize( v2f_normalW );
     vec4 L = normalize( LightPosW - v2f_positionW );

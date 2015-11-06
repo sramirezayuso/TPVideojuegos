@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public  class PointLight extends Light {
 
-	public PointLight(ShaderProgram shader,Vector3 postion,Vector3 ligh_color) {
+	public PointLight(ShaderProgram shader,Vector3 postion,Vector3 light_color) {
 		super(shader,GL_LIGHT0
          , new Vector3(new float[]{ 0.0f, 0.0f, 0.0f })
          , new Vector3(new float[]{ 1.0f, 1.0f, 1.0f })
@@ -18,7 +18,7 @@ public  class PointLight extends Light {
          , 1.0f
          , 0.0f
          ,  0.0f ,
-         ligh_color
+         light_color
          );
 	}
 
