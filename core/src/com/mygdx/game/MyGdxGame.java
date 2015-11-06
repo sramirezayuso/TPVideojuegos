@@ -64,7 +64,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		objects.add(spaceShip1);
 		objects.add(spaceShip2);
 		
-		Cube cube=new Cube(dataFolder, new Vector3(new float[]{0f,-0.1f,0f}));
+		Cube cube=new Cube(dataFolder, new Vector3(new float[]{0f,-0.5f,0f}));
 		objects.add(cube);
 		// camara
 		
@@ -76,9 +76,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.setPosition(cam_pos);
 		
 		lights.add(new PointLight(point_light_shaderProgram,
-				new Vector3(new float[] { 0f, 1f, 0.1f }),
+			new Vector3(new float[] { 0f, 1f, 0.1f }),
 				new Vector3(new float[] { 1f, 0f, 0f })
-				));
+			));
 		
 		lights.add(new SpotLight(spot_light_shaderProgram,			
 				new Vector3(new float[] { 6f, 10f, 0.2f })

@@ -49,6 +49,8 @@ public abstract class Model {
 			// modelMatrix.mul(viewProjection);
 			if (texture != null)
 				texture.bind();
+			shader.setUniformMatrix("u_m", modelMatrix);
+			
 			shader.setUniformMatrix("u_mvp", res);
 			shader.setUniformi("u_texture", 0);
 
@@ -70,7 +72,7 @@ public abstract class Model {
 
 		ModelLoader<?> loader = new ObjLoader();
 		ModelData data = loader.loadModelData(Gdx.files.internal(dataFolder
-				+ "ship.obj"));
+				+ filename));
 		Mesh mesh = new Mesh(true, data.meshes.get(0).vertices.length,
 				data.meshes.get(0).parts[0].indices.length,
 				VertexAttribute.Position(), VertexAttribute.Normal(),
