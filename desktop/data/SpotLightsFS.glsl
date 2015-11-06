@@ -60,9 +60,18 @@ vec4 MaterialSpecular=vec4(MaterialSpecular_3,1);
         //intensity=1.0;
     }
  
+ 	// Compute the diffuse term.
+    vec4 N = normalize( v2f_normalW );
+    vec4 L = normalize( LightPosW - v2f_positionW );
+    float NdotL = max( dot( N, L ), 0 );
+    vec4 Diffuse =  NdotL * LightColor * MaterialDiffuse;
+     
+ 
+ 
+ 
     
     //el primero es el correcto, el de abajo es de prueba
-    gl_FragColor = (intensity * MaterialDiffuse + MaterialSpecular) * texture2D(u_texture, v_texCoords);
+    gl_FragColor = (intensity * Diffuse + MaterialSpecular) * texture2D(u_texture, v_texCoords);
     //gl_FragColor = intensity * texture2D(u_texture, v_texCoords);
     
    

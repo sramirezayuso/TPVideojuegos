@@ -23,24 +23,38 @@ import com.mygdx.game.models.Ship;
 public class MyGdxGame extends ApplicationAdapter {
 	public static String dataFolder = "./data/";
 	SpriteBatch batch;
-	ShaderProgram shaderProgram;
-
+	private List<ShaderProgram> shaders=new ArrayList<ShaderProgram>();
+	
+	ShaderProgram spot_light_shaderProgram;
+	ShaderProgram point_light_shaderProgram;
 	private Cam camera;
 	private InputMultiplexer multiplexer;
 	private Ship spaceShip1;
 	private Ship spaceShip2;
 	private List<Model> objects=new ArrayList<Model>();
 	private List<Light> lights=new ArrayList<Light>();
+	
+	private ShaderProgram createShader(String dataFolder,String VSfilename,String FSfilename){
+		ShaderProgram shader;
+		String vs = Gdx.files.internal(dataFolder + VSfilename)
+				.readString();
+		String fs = Gdx.files.internal(dataFolder + FSfilename)
+				.readString();
+		shader = new ShaderProgram(vs, fs);
+		shader.pedantic = false;
+		System.out.println(shader.getLog());
+		return shader;
+	}
 	@Override
 	public void create() {
-		String vs = Gdx.files.internal(dataFolder + "SpotLightVS.glsl")
-				.readString();
-		String fs = Gdx.files.internal(dataFolder + "SpotLightsFS.glsl")
-				.readString();
-		shaderProgram = new ShaderProgram(vs, fs);
-		shaderProgram.pedantic = false;
-		System.out.println(shaderProgram.getLog());
+		
 
+		spot_light_shaderProgram=createShader(dataFolder,"SpotLightVS.glsl","SpotLightsFS.glsl");
+		
+		point_light_shaderProgram=createShader(dataFolder,"PointLightsVS.glsl","PointLightsFS.glsl");
+		
+		shaders.add(spot_light_shaderProgram);
+		shaders.add(point_light_shaderProgram);
 		
 		//objetos de la escena
 		spaceShip1 = new Ship(dataFolder,new Vector3(new float[]{0f,0f,0f}));
@@ -58,17 +72,16 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(multiplexer);
 		Vector3 cam_pos = new Vector3(new float[] { 0f, 0f, 1f });
 		camera.setPosition(cam_pos);
-		//lights
-//		lights.add(new PointLight(
-//				new Vector3(new float[] { 0f, 1f, 0.1f }),
-//				new Vector3(new float[] { 0f, 1f, 0f })
-//				));
-//		
-		lights.add(new SpotLight(
-				
-				new Vector3(new float[] { 6f, 10f, 0.2f })
-				, new Vector3(new float[] { 1f, 0f, 0f })
-				,new Vector3(new float[]{ 0.0f, -0.1f, 0.0f})));
+		
+		lights.add(new PointLight(point_light_shaderProgram,
+				new Vector3(new float[] { 0f, 1f, 0.1f }),
+				new Vector3(new float[] { 0f, 1f, 0f })
+				));
+		
+//		lights.add(new SpotLight(spot_light_shaderProgram,			
+//				new Vector3(new float[] { 3f, 5f, 0.2f })
+//				, new Vector3(new float[] { 1f, 1f, 1f })
+//				,new Vector3(new float[]{ 0.0f, -0.1f, 0.0f})));
 	}
 	
 
@@ -91,7 +104,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		
-		shaderProgram.begin();
+		//spot_light_shaderProgram.begin();
+		//point_light_shaderProgram.begin();
 		// original
 		// shaderProgram.setUniformMatrix("u_worldView", new Matrix4()); // aca
 		// trabajar
@@ -102,12 +116,20 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		//spaceshipMesh.render(shaderProgram, GL20.GL_TRIANGLES);
 		//spaceShip.render(shaderProgram,  GL20.GL_TRIANGLES);
-		for(Model model:objects){
-			model.render(shaderProgram,lights, camera, GL20.GL_TRIANGLES);
+		
+		for(Light light:lights){
+			ShaderProgram currentShader=light.getShader();
+			currentShader.begin();
+			for(Model model:objects){
+				model.render(currentShader,lights, camera, GL20.GL_TRIANGLES);
+			}
+			currentShader.end();
+				
 		}
 		
-		shaderProgram.end();
-		String shader_log=shaderProgram.getLog();
+		//spot_light_shaderProgram.end();
+		//point_light_shaderProgram.end();
+		String shader_log=spot_light_shaderProgram.getLog();
 		if(shader_log.length()>0)
 		System.out.println(shader_log);
 	}
