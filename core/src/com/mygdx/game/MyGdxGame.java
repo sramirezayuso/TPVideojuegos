@@ -54,7 +54,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		spot_light_shaderProgram=createShader(dataFolder,"SpotLightVS.glsl","SpotLightsFS.glsl");
 		
 		point_light_shaderProgram=createShader(dataFolder,"PointLightsVS.glsl","PointLightsFS.glsl");
-		//character_shader=createShader(dataFolder, "characterVS.glsl", "defaultFS.glsl");
+		character_shader=createShader(dataFolder, "characterVS.glsl", "defaultFS.glsl");
 		shaders.add(spot_light_shaderProgram);
 		shaders.add(point_light_shaderProgram);
 		
