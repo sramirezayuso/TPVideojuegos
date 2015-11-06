@@ -16,6 +16,8 @@ import com.mygdx.game.cameras.OrthographicCam;
 import com.mygdx.game.lights.Light;
 import com.mygdx.game.lights.PointLight;
 import com.mygdx.game.lights.SpotLight;
+import com.mygdx.game.models.Cube;
+import com.mygdx.game.models.Model;
 import com.mygdx.game.models.Ship;
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -27,7 +29,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private InputMultiplexer multiplexer;
 	private Ship spaceShip1;
 	private Ship spaceShip2;
-	private List<Ship> objects=new ArrayList<Ship>();
+	private List<Model> objects=new ArrayList<Model>();
 	private List<Light> lights=new ArrayList<Light>();
 	@Override
 	public void create() {
@@ -38,12 +40,16 @@ public class MyGdxGame extends ApplicationAdapter {
 		shaderProgram = new ShaderProgram(vs, fs);
 		shaderProgram.pedantic = false;
 		System.out.println(shaderProgram.getLog());
-//		ModelLoader<?> loader = new ObjLoader();
 
+		
+		//objetos de la escena
 		spaceShip1 = new Ship(dataFolder,new Vector3(new float[]{0f,0f,0f}));
-		spaceShip2 = new Ship(dataFolder,new Vector3(new float[]{0f,0.5f,0f}));
+		spaceShip2 = new Ship(dataFolder,new Vector3(new float[]{1f,0f,0f}));
 		objects.add(spaceShip1);
 		objects.add(spaceShip2);
+		
+		Cube cube=new Cube(dataFolder, new Vector3(new float[]{0f,-0.1f,0f}));
+		objects.add(cube);
 		// camara
 		
 		
@@ -61,7 +67,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		lights.add(new SpotLight(
 				
 				new Vector3(new float[] { 6f, 10f, 0.2f })
-				, new Vector3(new float[] { 1f, 1f, 1f })
+				, new Vector3(new float[] { 1f, 0f, 0f })
 				,new Vector3(new float[]{ 0.0f, -0.1f, 0.0f})));
 	}
 	
@@ -96,8 +102,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		//spaceshipMesh.render(shaderProgram, GL20.GL_TRIANGLES);
 		//spaceShip.render(shaderProgram,  GL20.GL_TRIANGLES);
-		for(Ship ship:objects){
-			ship.render(shaderProgram,lights, camera, GL20.GL_TRIANGLES);
+		for(Model model:objects){
+			model.render(shaderProgram,lights, camera, GL20.GL_TRIANGLES);
 		}
 		
 		shaderProgram.end();

@@ -18,61 +18,41 @@ import com.mygdx.game.lights.Light;
 public class Ship extends Model {
 	static Mesh spaceshipMesh;
 	static Texture img;
-	public static String dataFolder = null;
-	private Vector3 position;
+	private static String dataFolder = null;
+	private static final String OBJ_FILE="ship.obj";
+	private static final String IMG_FILE="ship.png";
+	
 
 	public Ship(String dataFolder, Vector3 position) {
-		super(new MetallicMaterial());
+		super(new MetallicMaterial(),position);
 		this.dataFolder = dataFolder;
 		loadImg();
 		loadMesh();
-		this.position = position;
 	}
-
+	
 	private static void loadMesh() {
 		if (spaceshipMesh == null) {
-			ModelLoader<?> loader = new ObjLoader();
-			ModelData data = loader.loadModelData(Gdx.files.internal(dataFolder
-					+ "ship.obj"));
-			spaceshipMesh = new Mesh(true, data.meshes.get(0).vertices.length,
-					data.meshes.get(0).parts[0].indices.length,
-					VertexAttribute.Position(), VertexAttribute.Normal(),
-					VertexAttribute.TexCoords(0));
-			spaceshipMesh.setVertices(data.meshes.get(0).vertices);
-			spaceshipMesh.setIndices(data.meshes.get(0).parts[0].indices);
+			spaceshipMesh=readMesh(OBJ_FILE, dataFolder);
 		}
 	}
 
 	private static void loadImg() {
 		if (img == null)
-			img = new Texture(dataFolder + "ship.png");
+			img = readTexture(IMG_FILE, dataFolder);
 
 	}
+	
+	
 
-	public void render(ShaderProgram shader, List<Light> lights, Cam camera,
-			int primitiveType) {
-
-		Matrix4 modelMatrix = new Matrix4().translate(position);
-		Matrix4 viewProjection = camera.getVP();
-
-		Matrix4 res = new Matrix4(modelMatrix);
-		res.mul(viewProjection);
-		camera.setParameters(shader);
-		// modelMatrix.mul(viewProjection);
-		img.bind();
-		shader.setUniformMatrix("u_mvp", res);
-		shader.setUniformi("u_texture", 0);
-
-		// iluminacion
-		// shader.setUniformf("in_normal",normal);
-		material.setParameters(shader);
-		camera.setParameters(shader);
-
-		// //iluminacion, se hace una pasada por cada luz
-		for (Light light : lights) {
-			light.setParameters(shader);
-			spaceshipMesh.render(shader, primitiveType);
-		}
+	@Override
+	protected Texture getTexture() {
+		return img;
 	}
+
+	@Override
+	protected Mesh getMesh() {
+		return spaceshipMesh;
+	}
+
 
 }

@@ -62,8 +62,8 @@ vec4 MaterialSpecular=vec4(MaterialSpecular_3,1);
  
     
     //el primero es el correcto, el de abajo es de prueba
-    //gl_FragColor = (intensity * MaterialDiffuse + MaterialSpecular) * texture2D(u_texture, v_texCoords);
-    gl_FragColor = intensity * texture2D(u_texture, v_texCoords);
+    gl_FragColor = (intensity * MaterialDiffuse + MaterialSpecular) * texture2D(u_texture, v_texCoords);
+    //gl_FragColor = intensity * texture2D(u_texture, v_texCoords);
     
    
     
