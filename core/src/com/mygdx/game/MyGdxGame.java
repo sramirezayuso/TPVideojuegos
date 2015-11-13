@@ -121,8 +121,9 @@ public class MyGdxGame extends ApplicationAdapter {
 			// Bind whatever uniforms / textures you need
 			//Texture texture = new Texture(dataFolder + "uv_dave_mapeo.jpg");
 			Texture texture = new Texture(dataFolder + "uv_dave_mapeo.jpg");
+			
 			texture.bind();
-
+			charShader.setUniformi("u_texture", 0);
 			Matrix4 modelMatrix = new Matrix4().translate(characterPosition);
 			Matrix4 view=camera.getV();
 			Matrix4 viewProjection = camera.getVP();
@@ -157,8 +158,12 @@ public class MyGdxGame extends ApplicationAdapter {
 				// mvpMatrix.mul(render.worldTransform);
 				charShader.setUniformMatrix("u_mvp", mvpMatrix);
 				charShader.setUniformMatrix("u_modelViewMatrix", u_modelViewMatrix);
-				charShader.setUniformMatrix("pepe", mvpMatrix);
+				//charShader.setUniformMatrix("pepe", mvpMatrix);
 				// StaticVariables.tempMatrix.idt();
+				Matrix4 nMatrix=new Matrix4(u_modelViewMatrix);
+				nMatrix.inv();
+				nMatrix.tra();
+				charShader.setUniformMatrix("u_normalMatrix", nMatrix);
 				for (int i = 0; i < bones.length; i++) {
 					final int idx = i / 16;
 					bones[i] = (render.bones == null
@@ -235,7 +240,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void render() {
 
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0,0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		Gdx.gl.glDepthFunc(GL20.GL_LESS);
