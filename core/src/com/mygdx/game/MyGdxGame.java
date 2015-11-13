@@ -101,7 +101,7 @@ public class MyGdxGame extends ApplicationAdapter {
 				.isLoaded("/home/fbejaran/TPVideojuegos/desktop/data/Dave.g3db")) {
 
 			if (!isInitialized) {
-				System.out.println("se inicializo el personaje");
+				
 				com.badlogic.gdx.graphics.g3d.Model characterModel = null;
 
 				characterModel = assets
@@ -119,15 +119,17 @@ public class MyGdxGame extends ApplicationAdapter {
 
 			charShader.begin();
 			// Bind whatever uniforms / textures you need
+			//Texture texture = new Texture(dataFolder + "uv_dave_mapeo.jpg");
 			Texture texture = new Texture(dataFolder + "uv_dave_mapeo.jpg");
 			texture.bind();
 
 			Matrix4 modelMatrix = new Matrix4().translate(characterPosition);
+			Matrix4 view=camera.getV();
 			Matrix4 viewProjection = camera.getVP();
 
 			Matrix4 mvpMatrix = new Matrix4(modelMatrix);
 			mvpMatrix.mul(viewProjection);
-
+			Matrix4 u_modelViewMatrix=new Matrix4(modelMatrix).mul(view);
 			Array<Renderable> renderables = new Array<Renderable>();
 			final Pool<Renderable> pool = new Pool<Renderable>() {
 				@Override
@@ -153,7 +155,9 @@ public class MyGdxGame extends ApplicationAdapter {
 
 				// mvpMatrix.set(g.cam.combined);
 				// mvpMatrix.mul(render.worldTransform);
-				charShader.setUniformMatrix("u_mvpMatrix", mvpMatrix);
+				charShader.setUniformMatrix("u_mvp", mvpMatrix);
+				charShader.setUniformMatrix("u_modelViewMatrix", u_modelViewMatrix);
+				charShader.setUniformMatrix("pepe", mvpMatrix);
 				// StaticVariables.tempMatrix.idt();
 				for (int i = 0; i < bones.length; i++) {
 					final int idx = i / 16;
@@ -167,6 +171,7 @@ public class MyGdxGame extends ApplicationAdapter {
 						render.meshPartOffset, render.meshPartSize);
 			}
 			charShader.end();
+			//System.out.println("se rendereo el personaje");
 
 		}
 

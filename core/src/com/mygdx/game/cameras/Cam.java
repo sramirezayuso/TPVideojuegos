@@ -88,6 +88,10 @@ public class Cam implements InputProcessor {
 
 		return ans;
 	}
+	
+	public Matrix4 getV(){
+		return this.getTR().inv();
+	}
 
 	/*
 	 * Basado en el código de
