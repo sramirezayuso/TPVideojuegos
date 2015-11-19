@@ -1,5 +1,7 @@
 package com.mygdx.game.models;
 
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.ModelLoader;
 import com.badlogic.gdx.graphics.Mesh;
@@ -11,62 +13,46 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.cameras.Cam;
+import com.mygdx.game.lights.Light;
 
-public class Ship {
+public class Ship extends Model {
 	static Mesh spaceshipMesh;
 	static Texture img;
-	public static String dataFolder = null;
-	private Vector3 position;
-	public Ship(String dataFolder,Vector3 position) {
+	private static String dataFolder = null;
+	private static final String OBJ_FILE="ship.obj";
+	private static final String IMG_FILE="ship.png";
+	
+
+	public Ship(String dataFolder, Vector3 position) {
+		super(new MetallicMaterial(),position);
 		this.dataFolder = dataFolder;
 		loadImg();
 		loadMesh();
-		this.position=position;
 	}
-
+	
 	private static void loadMesh() {
 		if (spaceshipMesh == null) {
-			ModelLoader<?> loader = new ObjLoader();
-			ModelData data = loader.loadModelData(Gdx.files.internal(dataFolder
-					+ "ship.obj"));
-			spaceshipMesh = new Mesh(true, data.meshes.get(0).vertices.length,
-					data.meshes.get(0).parts[0].indices.length,
-					VertexAttribute.Position(), VertexAttribute.Normal(),
-					VertexAttribute.TexCoords(0));
-			spaceshipMesh.setVertices(data.meshes.get(0).vertices);
-			spaceshipMesh.setIndices(data.meshes.get(0).parts[0].indices);
+			spaceshipMesh=readMesh(OBJ_FILE, dataFolder);
 		}
 	}
 
-	private static void loadImg(){
-		if(img==null)
-			img = new Texture(dataFolder + "ship.png");
-			
+	private static void loadImg() {
+		if (img == null)
+			img = readTexture(IMG_FILE, dataFolder);
+
 	}
 	
-	public void render(ShaderProgram shader, Cam camera, int primitiveType) {
-		
-		Matrix4 modelMatrix = new Matrix4().translate(position);	
-		Matrix4 viewProjection = camera.getVP();
-		
-		Matrix4 res = new Matrix4(modelMatrix);
-		res.mul(viewProjection);
-		
-		//modelMatrix.mul(viewProjection);
-		
-		
+	
 
-		shader.setUniformMatrix("u_mvp", res);
-		shader.setUniformi("u_texture", 0);
-		
-		spaceshipMesh.render(shader, primitiveType);
-
-		// usar aca el bind de la textura, no esta bien que este suelto
-		this.bind();
+	@Override
+	protected Texture getTexture() {
+		return img;
 	}
 
-	void bind() {
-		img.bind();
-
+	@Override
+	protected Mesh getMesh() {
+		return spaceshipMesh;
 	}
+
+
 }

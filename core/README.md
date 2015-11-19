@@ -37,8 +37,6 @@ Es la formula copiada de la pagina recomendada(http://www.3dgep.com/understandin
 cuando moves mouse, tocas yaw pitch roll. Se podifica si o si a donde miras en funcion de esos angulos
 
 
-
-
 __________________________________
 4/8/2015
 
@@ -107,4 +105,31 @@ Las variables que "tiene" el vertex shader se las pasas cuando haces : program.s
 En el vertex shader, hay variables "Uniform", variables "attribute" para el archivo de puntos ".obj", y variables "varying" para materiales.
 Para las luces solo te importa "varying", no el otro.
  
+ --------------------
+ 25/9
+ 
+ *MetallicMaterial no esta realmente configurado para metal, REVISAR
+ *¿Vector normal al vertice???
+ 
+ -------------------
+ 
+ 2/10
+ *¿Como levantar propiedades de material del archivo *.mtl?no hace falta
+ *¿Que ocurre cuando hay múltiples texturas? ¿Se cargan igual que como el caso de una unica imagen de la nave? no lo hagas, hace cosas con una sola textura
+ *animaciones: no en obj, exportarla en 3dg (ver libgdx animations and skinning).
+ *gdbugger: para debugger.
+ 
+ 
+Animacion 
+----
+http://www.gamefromscratch.com/post/2014/02/14/No-bones-about-it-Bones-in-LibGDX-and-Blender.aspx
+http://mmmovania.blogspot.com.ar/2012/11/skeletal-animation-and-gpu-skinning.html
+http://dagger.se/?p=71
 
+
+Para comprobar la spotlight, poner un plano para ver el circulo. Segun jorge, hay algo raro.
+
+6/11
+----
+En la pointlight hay como luz ambiente, la luz en si no se ve del color que deberia.
+ARREGLADO!
