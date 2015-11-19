@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -64,7 +65,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	private void createCharacter() {
 		character_shaderProgram = createShader(dataFolder, "characterVS.glsl",
-				"defaultFS.glsl");
+				"characterFS.glsl");
 		assets = new AssetManager();
 		// assets.load(dataFolder + "Dave.g3dj",
 		// com.badlogic.gdx.graphics.g3d.Model
@@ -119,8 +120,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 			charShader.begin();
 			// Bind whatever uniforms / textures you need
-			//Texture texture = new Texture(dataFolder + "uv_dave_mapeo.jpg");
 			Texture texture = new Texture(dataFolder + "uv_dave_mapeo.jpg");
+			//Texture texture = new Texture(dataFolder + "tile.png");
 			
 			texture.bind();
 			charShader.setUniformi("u_texture", 0);
@@ -239,6 +240,13 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void render() {
+		
+		//SHADOW MAP
+//		FrameBuffer s = new FrameBuffer(RGBA8888, 0, 0, true);
+//		
+//		s.getColorBufferTexture().bind();
+//		
+	
 
 		Gdx.gl.glClearColor(0,0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);

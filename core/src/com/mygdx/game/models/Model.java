@@ -51,6 +51,9 @@ public abstract class Model {
 				texture.bind();
 			shader.setUniformMatrix("u_m", modelMatrix);
 			
+			//texture.bind()//SHADOW MAP
+			
+			
 			shader.setUniformMatrix("u_mvp", res);
 			shader.setUniformi("u_texture", 0);
 
