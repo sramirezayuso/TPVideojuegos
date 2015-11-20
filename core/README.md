@@ -139,8 +139,12 @@ ARREGLADO!
 
 20/11
 -----
+http://www.microbasic.net/2015/01/tutorial-shadow-mapping-with-libgdx-3d-shadow-mapping-lighting/
 *En el shadow map las posiciones aparecen al reves.
 *En el shadow map desaparece la segunda nave.
 *En el shadow map las cosas mas cercas estan marcadas como mas lejos y viceversa!!!!.ARREGLADO
+
+*en la pagina 13 del tutorial,¿ "u_lightTrans" es matriz View Projetion?
+
 
 

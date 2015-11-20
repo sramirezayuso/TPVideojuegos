@@ -57,7 +57,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private boolean lights_on = false;
 
 	// shadows
-	ShaderProgram shadow_shaderProgram;
+	ShaderProgram depthMapper;
 	DirectionalLight directionalLight;
 	FrameBuffer shadowBuffer;
 	public static final int DEPTHMAPIZE = 1024;
@@ -188,7 +188,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void create() {
 
-		shadow_shaderProgram = createShader(dataFolder, "DirectionalShadowVS.glsl", "DirectionalShadowFS.glsl");
+		depthMapper = createShader(dataFolder, "DepthMapperVS.glsl", "DepthMapperFS.glsl");
 		directional_light_shaderProgram = createShader(dataFolder, "DirectionalLightsVS.glsl",
 				"DirectionalLightsFS.glsl");
 
@@ -199,7 +199,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		shaders.add(spot_light_shaderProgram);
 		shaders.add(point_light_shaderProgram);
 		shaders.add(directional_light_shaderProgram);
-		shaders.add(shadow_shaderProgram);
+		shaders.add(depthMapper);
 
 		// objetos de la escena
 		spaceShip1 = new Ship(dataFolder, new Vector3(new float[] { 0f, 0f, 0f }));
@@ -299,7 +299,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		// s.getColorBufferTexture().bind();
 		//
 		for (Model model : objects) {
-			model.renderShadow(camera, GL20.GL_TRIANGLES, shadow_shaderProgram, directionalLight);
+			model.renderShadow(camera, GL20.GL_TRIANGLES, depthMapper, directionalLight);
 		}
 		shadowBuffer.end();
 		//
