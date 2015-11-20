@@ -44,7 +44,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	ModelInstance character_model_instance;
 	boolean isInitialized = false;
 	AssetManager assets;
-	boolean character_animation_on=false;
+	boolean character_animation_on = false;
 	//
 
 	private Cam camera;
@@ -53,6 +53,10 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Ship spaceShip2;
 	private List<Model> objects = new ArrayList<Model>();
 	private List<Light> lights = new ArrayList<Light>();
+	private boolean lights_on = true;
+
+	// shadows
+	ShaderProgram shadow_shaderProgram;
 
 	private ShaderProgram createShader(String dataFolder, String VSfilename, String FSfilename) {
 		ShaderProgram shader;
@@ -66,6 +70,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	private void createCharacter() {
 		character_shaderProgram = createShader(dataFolder, "characterVS.glsl", "characterFS.glsl");
+		shaders.add(character_shaderProgram);
 		assets = new AssetManager();
 		// assets.load(dataFolder + "Dave.g3dj",
 		// com.badlogic.gdx.graphics.g3d.Model
@@ -179,15 +184,20 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void create() {
 
+		shadow_shaderProgram = createShader(dataFolder, "DirectionalShadowVS.glsl", "DirectionalShadowFS.glsl");
 		directional_light_shaderProgram = createShader(dataFolder, "DirectionalLightsVS.glsl",
 				"DirectionalLightsFS.glsl");
+		
+		
 		spot_light_shaderProgram = createShader(dataFolder, "SpotLightVS.glsl", "SpotLightsFS.glsl");
-
+		
 		point_light_shaderProgram = createShader(dataFolder, "PointLightsVS.glsl", "PointLightsFS.glsl");
-
+		
 		shaders.add(spot_light_shaderProgram);
 		shaders.add(point_light_shaderProgram);
 		shaders.add(directional_light_shaderProgram);
+		shaders.add(shadow_shaderProgram);
+		
 		// objetos de la escena
 		spaceShip1 = new Ship(dataFolder, new Vector3(new float[] { 0f, 0f, 0f }));
 		spaceShip2 = new Ship(dataFolder, new Vector3(new float[] { 1f, 0f, 0f }));
@@ -214,10 +224,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		// new float[] { 0f, 1f, 0f }), new Vector3(new float[] { 0.0f, -0.1f,
 		// 0.0f })));
 
-		lights.add(new DirectionalLight(directional_light_shaderProgram, 
-				new Vector3(new float[] { 0f, 2f, 0.1f }),
-				new Vector3(new float[] { 0f, 0f, -0.1f }), 
-				new Vector3(new float[] { 1f, 1f, 1f })));
+		lights.add(new DirectionalLight(directional_light_shaderProgram, new Vector3(new float[] { 0f, 2f, 0.1f }),
+				new Vector3(new float[] { 0f, 0f, -0.1f }), new Vector3(new float[] { 1f, 1f, 1f })));
 		// personaje
 
 		createCharacter();
@@ -249,51 +257,39 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 
-		// spot_light_shaderProgram.begin();
-		// point_light_shaderProgram.begin();
-		// original
-		// shaderProgram.setUniformMatrix("u_worldView", new Matrix4()); // aca
-		// trabajar
-		// Intento de agregado de la camara aca abajo
+		if (lights_on) {
+			for (Model model : objects) {
+				model.render(lights, camera, GL20.GL_TRIANGLES);
+			}
+		}
+		if (character_animation_on) {// se anima al personaje
+			// System.out.println("animation controller distinto null?"+(animation_controller!=null));
 
-		// camera.lookAt(new Vector3(new float[]{1f,-1f,0f}));
+			renderCharacter(character_shaderProgram);
+			if (animation_controller != null) {
+				updateCharacter(animation_controller);
 
-		// spaceshipMesh.render(shaderProgram, GL20.GL_TRIANGLES);
-		// spaceShip.render(shaderProgram, GL20.GL_TRIANGLES);
-
-		for (Model model : objects) {
-			model.render(lights, camera, GL20.GL_TRIANGLES);
+			}
 		}
 
-		// spot_light_shaderProgram.end();
-		// point_light_shaderProgram.end();
-		String shader_log = spot_light_shaderProgram.getLog();
-		if (shader_log.length() > 0)
-			System.out.println(shader_log);
+		// shadow mapping
 
-		String shader_log2 = point_light_shaderProgram.getLog();
-		if (shader_log2.length() > 0)
-			System.out.println(shader_log2);
+		//
 
-		String shader_log3 = character_shaderProgram.getLog();
-		if (shader_log3.length() > 0)
-			System.out.println(shader_log3);
-
-		String shader_log4 = directional_light_shaderProgram.getLog();
-		if (shader_log4.length() > 0)
-			System.out.println(shader_log4);
-
-		// se anima al personaje
-		// System.out.println("animation controller distinto null?"+(animation_controller!=null));
-
-		if(character_animation_on){
-		renderCharacter(character_shaderProgram);
-		if (animation_controller != null) {
-			updateCharacter(animation_controller);
-
-		}
+		for(ShaderProgram shader:shaders){
+			printShaderLog(shader);
 		}
 
 	}
+	
+	private void printShaderLog(ShaderProgram shader){
+		if(shader!=null){
+			String log=shader.getLog();
+			if(log.length()>0){
+				System.out.println(log);
+			}
+		}
+	}
+	
 
 }
