@@ -6,15 +6,27 @@ import com.badlogic.gdx.math.Vector3;
 
 public class DirectionalLight extends Light {
 
-	public DirectionalLight(ShaderProgram shader,int m_LightID, Vector3 m_Ambient,
-			Vector3 m_Diffuse, Vector3 m_Specular, Vector3 m_Position,
-			Vector3 m_SpotDirection, float m_SpotExponent, float m_SpotCutoff,
-			float m_ConstantAttenuation, float m_LinearAttenuation,
-			float m_QuadraticAttenuation, Vector3 m_light_color) {
-		super(shader,m_LightID, m_Ambient, m_Diffuse, m_Specular, m_Position, m_SpotDirection,
-				m_SpotExponent, m_SpotCutoff, m_ConstantAttenuation,
-				m_LinearAttenuation, m_QuadraticAttenuation, m_light_color);
-		// TODO Auto-generated constructor stub
+	public DirectionalLight(ShaderProgram shader, Vector3 m_Position,
+			Vector3 m_Direction, Vector3 light_color) {
+		super(shader,GL_LIGHT0
+		         , new Vector3(new float[]{ 0.0f, 0.0f, 0.0f })
+		         , new Vector3(new float[]{ 1.0f, 1.0f, 1.0f })
+		         , new Vector3(new float[]{ 1.0f, 1.0f, 1.0f})
+		         , m_Position
+		         , new Vector3(new float[]{ 0.0f, 0.0f, 1.0f})
+		         ,  0.0f
+		         , 180.0f
+		         , 1.0f
+		         , 0.0f
+		         ,  0.0f ,
+		         light_color
+		         );
+	}
+	@Override
+	public void setParameters() {
+		// TODO Auto-generated method stub
+		super.setParameters();
+		shader.setUniformf("spotlightDirection_3",m_SpotDirection );
 	}
 	
 

@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 
 public class SpotLight extends Light {
-	Vector3 l_spotDir_3;
 	static float cutoff=(float) Math.toRadians(45.0);
 	
     	public SpotLight(ShaderProgram shader,Vector3 postion,Vector3 ligh_color,Vector3 direction) {
@@ -31,7 +30,7 @@ public class SpotLight extends Light {
 		
 		
 		shader.setUniformf("l_spotCutOff",m_SpotCutoff);
-		shader.setUniformf("spotlightDirection_3",m_SpotDirection );
+		shader.setUniformf("otlightDirection_3",m_SpotDirection );
 		
 	}
 

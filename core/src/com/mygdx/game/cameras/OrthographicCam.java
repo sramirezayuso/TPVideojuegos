@@ -35,16 +35,14 @@ public class OrthographicCam extends Cam {
 		float height = 2;
 		
 
-		Matrix4 ans = new Matrix4(new float[] { 1 / width, 0, 0, 0,
-												0,1 / height, 0, 0,
-												0, 0, -2 / (z_far - z_near),0, 
-												0, 0,-(z_far + z_near) / (z_far - z_near), 1 });
+//		Matrix4 ans = new Matrix4(new float[] { 1 / width, 0, 0, 0,
+//												0,1 / height, 0, 0,
+//												0, 0, -2 / (z_far - z_near),0, 
+//												0, 0,-(z_far + z_near) / (z_far - z_near), 1 });
+//
+//		
 
-		// retorna matrix de prueba, en realidad deberia devolver ans;
-		Matrix4 aux = new Matrix4(new float[] { 1, 0, 0, 0,// primer col
-				0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 });
-
-		return ans;
+		return OrthographicProjection.getProjection(width, height, z_far, z_near);
 	}
 
 	

@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.cameras.Cam;
 import com.mygdx.game.cameras.OrthographicCam;
+import com.mygdx.game.lights.DirectionalLight;
 import com.mygdx.game.lights.Light;
 import com.mygdx.game.lights.PointLight;
 import com.mygdx.game.lights.SpotLight;
@@ -33,16 +34,17 @@ public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	private List<ShaderProgram> shaders = new ArrayList<ShaderProgram>();
 
-	// character
 	ShaderProgram spot_light_shaderProgram;
 	ShaderProgram point_light_shaderProgram;
-
+	ShaderProgram directional_light_shaderProgram;
+	// character
 	ShaderProgram character_shaderProgram;
 	Vector3 characterPosition = new Vector3(new float[] { 0f, 0f, -1f });
 	AnimationController animation_controller;
 	ModelInstance character_model_instance;
 	boolean isInitialized = false;
 	AssetManager assets;
+	boolean character_animation_on=false;
 	//
 
 	private Cam camera;
@@ -52,8 +54,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private List<Model> objects = new ArrayList<Model>();
 	private List<Light> lights = new ArrayList<Light>();
 
-	private ShaderProgram createShader(String dataFolder, String VSfilename,
-			String FSfilename) {
+	private ShaderProgram createShader(String dataFolder, String VSfilename, String FSfilename) {
 		ShaderProgram shader;
 		String vs = Gdx.files.internal(dataFolder + VSfilename).readString();
 		String fs = Gdx.files.internal(dataFolder + FSfilename).readString();
@@ -64,15 +65,13 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	private void createCharacter() {
-		character_shaderProgram = createShader(dataFolder, "characterVS.glsl",
-				"characterFS.glsl");
+		character_shaderProgram = createShader(dataFolder, "characterVS.glsl", "characterFS.glsl");
 		assets = new AssetManager();
 		// assets.load(dataFolder + "Dave.g3dj",
 		// com.badlogic.gdx.graphics.g3d.Model
 		// .class);
 
-		assets.load("/home/fbejaran/TPVideojuegos/desktop/data/Dave.g3db",
-				com.badlogic.gdx.graphics.g3d.Model.class);
+		assets.load(dataFolder + "Dave.g3db", com.badlogic.gdx.graphics.g3d.Model.class);
 		assets.finishLoading();
 		// com.badlogic.gdx.graphics.g3d.Model characterModel = assets
 		// .get(dataFolder + "Dave.g3db");
@@ -98,22 +97,19 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	public void renderCharacter(ShaderProgram charShader) {
 
-		if (assets
-				.isLoaded("/home/fbejaran/TPVideojuegos/desktop/data/Dave.g3db")) {
+		if (assets.isLoaded(dataFolder + "Dave.g3db")) {
 
 			if (!isInitialized) {
-				
+
 				com.badlogic.gdx.graphics.g3d.Model characterModel = null;
 
-				characterModel = assets
-						.get("/home/fbejaran/TPVideojuegos/desktop/data/Dave.g3db");
+				characterModel = assets.get(dataFolder + "Dave.g3db");
 
 				character_model_instance = new ModelInstance(characterModel);
-				animation_controller = new AnimationController(
-						character_model_instance);
-				animation_controller.animate(
-						character_model_instance.animations.get(0).id, -1, 1f,
-						null, 0.2f); // Starts the animaton
+				animation_controller = new AnimationController(character_model_instance);
+				animation_controller.animate(character_model_instance.animations.get(0).id, -1, 1f, null, 0.2f); // Starts
+																													// the
+																													// animaton
 
 				isInitialized = true;
 			}
@@ -121,17 +117,17 @@ public class MyGdxGame extends ApplicationAdapter {
 			charShader.begin();
 			// Bind whatever uniforms / textures you need
 			Texture texture = new Texture(dataFolder + "uv_dave_mapeo.jpg");
-			//Texture texture = new Texture(dataFolder + "tile.png");
-			
+			// Texture texture = new Texture(dataFolder + "tile.png");
+
 			texture.bind();
 			charShader.setUniformi("u_texture", 0);
 			Matrix4 modelMatrix = new Matrix4().translate(characterPosition);
-			Matrix4 view=camera.getV();
+			Matrix4 view = camera.getV();
 			Matrix4 viewProjection = camera.getVP();
 
 			Matrix4 mvpMatrix = new Matrix4(modelMatrix);
 			mvpMatrix.mul(viewProjection);
-			Matrix4 u_modelViewMatrix=new Matrix4(modelMatrix).mul(view);
+			Matrix4 u_modelViewMatrix = new Matrix4(modelMatrix).mul(view);
 			Array<Renderable> renderables = new Array<Renderable>();
 			final Pool<Renderable> pool = new Pool<Renderable>() {
 				@Override
@@ -159,25 +155,22 @@ public class MyGdxGame extends ApplicationAdapter {
 				// mvpMatrix.mul(render.worldTransform);
 				charShader.setUniformMatrix("u_mvp", mvpMatrix);
 				charShader.setUniformMatrix("u_modelViewMatrix", u_modelViewMatrix);
-				//charShader.setUniformMatrix("pepe", mvpMatrix);
+				// charShader.setUniformMatrix("pepe", mvpMatrix);
 				// StaticVariables.tempMatrix.idt();
-				Matrix4 nMatrix=new Matrix4(u_modelViewMatrix);
+				Matrix4 nMatrix = new Matrix4(u_modelViewMatrix);
 				nMatrix.inv();
 				nMatrix.tra();
 				charShader.setUniformMatrix("u_normalMatrix", nMatrix);
 				for (int i = 0; i < bones.length; i++) {
 					final int idx = i / 16;
-					bones[i] = (render.bones == null
-							|| idx >= render.bones.length || render.bones[idx] == null) ? idtMatrix.val[i % 16]
+					bones[i] = (render.bones == null || idx >= render.bones.length || render.bones[idx] == null) ? idtMatrix.val[i % 16]
 							: render.bones[idx].val[i % 16];
 				}
-				charShader.setUniformMatrix4fv("u_bones", bones, 0,
-						bones.length);
-				render.mesh.render(charShader, render.primitiveType,
-						render.meshPartOffset, render.meshPartSize);
+				charShader.setUniformMatrix4fv("u_bones", bones, 0, bones.length);
+				render.mesh.render(charShader, render.primitiveType, render.meshPartOffset, render.meshPartSize);
 			}
 			charShader.end();
-			//System.out.println("se rendereo el personaje");
+			// System.out.println("se rendereo el personaje");
 
 		}
 
@@ -186,43 +179,45 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void create() {
 
-		spot_light_shaderProgram = createShader(dataFolder, "SpotLightVS.glsl",
-				"SpotLightsFS.glsl");
+		directional_light_shaderProgram = createShader(dataFolder, "DirectionalLightsVS.glsl",
+				"DirectionalLightsFS.glsl");
+		spot_light_shaderProgram = createShader(dataFolder, "SpotLightVS.glsl", "SpotLightsFS.glsl");
 
-		point_light_shaderProgram = createShader(dataFolder,
-				"PointLightsVS.glsl", "PointLightsFS.glsl");
+		point_light_shaderProgram = createShader(dataFolder, "PointLightsVS.glsl", "PointLightsFS.glsl");
 
 		shaders.add(spot_light_shaderProgram);
 		shaders.add(point_light_shaderProgram);
-
+		shaders.add(directional_light_shaderProgram);
 		// objetos de la escena
-		spaceShip1 = new Ship(dataFolder, new Vector3(
-				new float[] { 0f, 0f, 0f }));
-		spaceShip2 = new Ship(dataFolder, new Vector3(
-				new float[] { 1f, 0f, 0f }));
+		spaceShip1 = new Ship(dataFolder, new Vector3(new float[] { 0f, 0f, 0f }));
+		spaceShip2 = new Ship(dataFolder, new Vector3(new float[] { 1f, 0f, 0f }));
 		objects.add(spaceShip1);
 		objects.add(spaceShip2);
 
-		Cube cube = new Cube(dataFolder, new Vector3(new float[] { 0f, -0.5f,
-				0f }));
+		Cube cube = new Cube(dataFolder, new Vector3(new float[] { 0f, -0.8f, 0.5f }));
 		objects.add(cube);
 		// camara
 
 		camera = new OrthographicCam(this);
 		multiplexer = new InputMultiplexer(camera);
 		Gdx.input.setInputProcessor(multiplexer);
-		Vector3 cam_pos = new Vector3(new float[] { 0f, 0f, 1f });
+		Vector3 cam_pos = new Vector3(new float[] { 1.75f, 0f, 1f });
 		camera.setPosition(cam_pos);
 
 		// luces
-		lights.add(new PointLight(point_light_shaderProgram, new Vector3(
-				new float[] { 0f, 1f, 0.1f }), new Vector3(new float[] { 1f,
-				0f, 0f })));
+		// lights.add(new PointLight(point_light_shaderProgram, new Vector3(new
+		// float[] { 0f, 1f, 0.1f }), new Vector3(
+		// new float[] { 1f, 0f, 0f })));
+		//
+		// lights.add(new SpotLight(spot_light_shaderProgram, new Vector3(new
+		// float[] { 6f, 10f, 0.2f }), new Vector3(
+		// new float[] { 0f, 1f, 0f }), new Vector3(new float[] { 0.0f, -0.1f,
+		// 0.0f })));
 
-		lights.add(new SpotLight(spot_light_shaderProgram, new Vector3(
-				new float[] { 6f, 10f, 0.2f }), new Vector3(new float[] { 0f,
-				1f, 0f }), new Vector3(new float[] { 0.0f, -0.1f, 0.0f })));
-
+		lights.add(new DirectionalLight(directional_light_shaderProgram, 
+				new Vector3(new float[] { 0f, 2f, 0.1f }),
+				new Vector3(new float[] { 0f, 0f, -0.1f }), 
+				new Vector3(new float[] { 1f, 1f, 1f })));
 		// personaje
 
 		createCharacter();
@@ -240,15 +235,14 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void render() {
-		
-		//SHADOW MAP
-//		FrameBuffer s = new FrameBuffer(RGBA8888, 0, 0, true);
-//		
-//		s.getColorBufferTexture().bind();
-//		
-	
 
-		Gdx.gl.glClearColor(0,0, 0, 1);
+		// SHADOW MAP
+		// FrameBuffer s = new FrameBuffer(RGBA8888, 0, 0, true);
+		//
+		// s.getColorBufferTexture().bind();
+		//
+
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		Gdx.gl.glDepthFunc(GL20.GL_LESS);
@@ -285,13 +279,19 @@ public class MyGdxGame extends ApplicationAdapter {
 		if (shader_log3.length() > 0)
 			System.out.println(shader_log3);
 
+		String shader_log4 = directional_light_shaderProgram.getLog();
+		if (shader_log4.length() > 0)
+			System.out.println(shader_log4);
+
 		// se anima al personaje
 		// System.out.println("animation controller distinto null?"+(animation_controller!=null));
 
+		if(character_animation_on){
 		renderCharacter(character_shaderProgram);
 		if (animation_controller != null) {
 			updateCharacter(animation_controller);
 
+		}
 		}
 
 	}
