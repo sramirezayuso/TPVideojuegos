@@ -2,6 +2,7 @@ package com.mygdx.game.lights;
 
 import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class DirectionalLight extends Light {
@@ -27,6 +28,9 @@ public class DirectionalLight extends Light {
 		// TODO Auto-generated method stub
 		super.setParameters();
 		shader.setUniformf("spotlightDirection_3",m_SpotDirection );
+	}
+	public Vector3 getPosition() {
+		return m_Position;
 	}
 	
 

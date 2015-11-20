@@ -345,4 +345,7 @@ public class Cam implements InputProcessor {
 	private float[] vect3TofloatArray(Vector3 vect){
 		return new float[]{vect.x,vect.y,vect.z};
 	}
+
+	public float getFar() {
+		return z_far;	}
 }

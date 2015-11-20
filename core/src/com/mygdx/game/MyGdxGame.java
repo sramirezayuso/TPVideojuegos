@@ -53,10 +53,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Ship spaceShip2;
 	private List<Model> objects = new ArrayList<Model>();
 	private List<Light> lights = new ArrayList<Light>();
-	private boolean lights_on = true;
+	private boolean lights_on = false;
 
 	// shadows
 	ShaderProgram shadow_shaderProgram;
+	DirectionalLight directionalLight;
 
 	private ShaderProgram createShader(String dataFolder, String VSfilename, String FSfilename) {
 		ShaderProgram shader;
@@ -223,9 +224,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		// float[] { 6f, 10f, 0.2f }), new Vector3(
 		// new float[] { 0f, 1f, 0f }), new Vector3(new float[] { 0.0f, -0.1f,
 		// 0.0f })));
-
-		lights.add(new DirectionalLight(directional_light_shaderProgram, new Vector3(new float[] { 0f, 2f, 0.1f }),
-				new Vector3(new float[] { 0f, 0f, -0.1f }), new Vector3(new float[] { 1f, 1f, 1f })));
+		directionalLight=new DirectionalLight(directional_light_shaderProgram, new Vector3(new float[] { 0f, 2f, 0.1f }),
+				new Vector3(new float[] { 0f, 0f, -0.1f }), new Vector3(new float[] { 1f, 1f, 1f }));
+		lights.add(directionalLight);
 		// personaje
 
 		createCharacter();
@@ -260,6 +261,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		if (lights_on) {
 			for (Model model : objects) {
 				model.render(lights, camera, GL20.GL_TRIANGLES);
+				model.renderShadow(camera,GL20.GL_TRIANGLES,shadow_shaderProgram,directionalLight);
 			}
 		}
 		if (character_animation_on) {// se anima al personaje
@@ -272,9 +274,12 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 		}
 
-		// shadow mapping
-
-		//
+		
+		//SHADOW MAPPING2
+		for (Model model : objects) {
+			model.renderShadow(camera,GL20.GL_TRIANGLES,shadow_shaderProgram,directionalLight);
+		}
+		
 
 		for(ShaderProgram shader:shaders){
 			printShaderLog(shader);

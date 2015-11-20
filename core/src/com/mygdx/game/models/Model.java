@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.cameras.Cam;
+import com.mygdx.game.lights.DirectionalLight;
 import com.mygdx.game.lights.Light;
 
 public abstract class Model {
@@ -29,6 +30,24 @@ public abstract class Model {
 
 	}
 
+	public void renderShadow(Cam camera,int primitiveType,ShaderProgram shader,DirectionalLight light){
+		shader.begin();
+		Matrix4 modelMatrix = new Matrix4().translate(position);
+		Matrix4 viewProjection = camera.getVP();
+
+		Matrix4 res = new Matrix4(modelMatrix);
+		res.mul(viewProjection);
+		shader.setUniformMatrix("u_m", modelMatrix);
+		float u_cameraFar=camera.getFar();
+		
+		
+		//texture.bind()//SHADOW MAP
+		shader.setUniformf("u_cameraFar",u_cameraFar);
+		shader.setUniformf("u_lightPosition", light.getPosition());
+		
+		shader.setUniformMatrix("u_vp", viewProjection);
+	}
+	
 	public void render(List<Light> lights, Cam camera, int primitiveType) {
 
 		// //iluminacion, se hace una pasada por cada luz
