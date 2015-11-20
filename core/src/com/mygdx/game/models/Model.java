@@ -40,12 +40,18 @@ public abstract class Model {
 		shader.setUniformMatrix("u_m", modelMatrix);
 		float u_cameraFar=camera.getFar();
 		
+		Texture texture = getTexture();
+		//texture.bind();//SHADOW MAP
 		
-		//texture.bind()//SHADOW MAP
+		
+		
 		shader.setUniformf("u_cameraFar",u_cameraFar);
 		shader.setUniformf("u_lightPosition", light.getPosition());
 		
 		shader.setUniformMatrix("u_vp", viewProjection);
+		Mesh mesh = getMesh();
+		mesh.render(shader, primitiveType);
+		shader.end();
 	}
 	
 	public void render(List<Light> lights, Cam camera, int primitiveType) {
@@ -70,7 +76,6 @@ public abstract class Model {
 				texture.bind();
 			shader.setUniformMatrix("u_m", modelMatrix);
 			
-			//texture.bind()//SHADOW MAP
 			
 			
 			shader.setUniformMatrix("u_mvp", res);

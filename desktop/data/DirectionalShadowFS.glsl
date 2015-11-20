@@ -18,13 +18,16 @@ uniform vec3 MaterialSpecular_3;
 uniform float MaterialShininess; 
 
 uniform float u_cameraFar;
-varying vec4 v_position;
-uniform vec3 u_lightPosition;
+varying vec4 v_position;//coordenadas mundo
+uniform vec3 u_lightPosition;//coordenadas mundo
 
 
 void main()
 {
-gl_FragColor = vec4(length(v_position.xyz-u_lightPosition)/u_cameraFar);
+//float intensity=length(v_position.xyz-u_lightPosition)/u_cameraFar;
+float factor=u_cameraFar/10.0;
+float intensity=1.0-length(v_position.xyz-u_lightPosition)/factor;
+gl_FragColor = intensity*vec4(1.0,1.0,1.0,1.0);
 }
 
 

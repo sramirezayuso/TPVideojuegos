@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -58,6 +59,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	// shadows
 	ShaderProgram shadow_shaderProgram;
 	DirectionalLight directionalLight;
+	FrameBuffer shadowBuffer;
+	public static final int DEPTHMAPIZE = 1024;
 
 	private ShaderProgram createShader(String dataFolder, String VSfilename, String FSfilename) {
 		ShaderProgram shader;
@@ -188,17 +191,16 @@ public class MyGdxGame extends ApplicationAdapter {
 		shadow_shaderProgram = createShader(dataFolder, "DirectionalShadowVS.glsl", "DirectionalShadowFS.glsl");
 		directional_light_shaderProgram = createShader(dataFolder, "DirectionalLightsVS.glsl",
 				"DirectionalLightsFS.glsl");
-		
-		
+
 		spot_light_shaderProgram = createShader(dataFolder, "SpotLightVS.glsl", "SpotLightsFS.glsl");
-		
+
 		point_light_shaderProgram = createShader(dataFolder, "PointLightsVS.glsl", "PointLightsFS.glsl");
-		
+
 		shaders.add(spot_light_shaderProgram);
 		shaders.add(point_light_shaderProgram);
 		shaders.add(directional_light_shaderProgram);
 		shaders.add(shadow_shaderProgram);
-		
+
 		// objetos de la escena
 		spaceShip1 = new Ship(dataFolder, new Vector3(new float[] { 0f, 0f, 0f }));
 		spaceShip2 = new Ship(dataFolder, new Vector3(new float[] { 1f, 0f, 0f }));
@@ -224,8 +226,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		// float[] { 6f, 10f, 0.2f }), new Vector3(
 		// new float[] { 0f, 1f, 0f }), new Vector3(new float[] { 0.0f, -0.1f,
 		// 0.0f })));
-		directionalLight=new DirectionalLight(directional_light_shaderProgram, new Vector3(new float[] { 0f, 2f, 0.1f }),
-				new Vector3(new float[] { 0f, 0f, -0.1f }), new Vector3(new float[] { 1f, 1f, 1f }));
+		directionalLight = new DirectionalLight(directional_light_shaderProgram, new Vector3(
+				new float[] { 0f, 2f, 0.1f }), new Vector3(new float[] { 0f, 0f, -0.1f }), new Vector3(new float[] {
+				1f, 1f, 1f }));
 		lights.add(directionalLight);
 		// personaje
 
@@ -245,12 +248,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void render() {
 
-		// SHADOW MAP
-		// FrameBuffer s = new FrameBuffer(RGBA8888, 0, 0, true);
-		//
-		// s.getColorBufferTexture().bind();
-		//
-
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
@@ -258,13 +255,18 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 
+		//RENDER DE SOMBRAS
+		renderShadows();
+		
+		//RENDER DE LUCES
 		if (lights_on) {
 			for (Model model : objects) {
 				model.render(lights, camera, GL20.GL_TRIANGLES);
-				model.renderShadow(camera,GL20.GL_TRIANGLES,shadow_shaderProgram,directionalLight);
 			}
 		}
-		if (character_animation_on) {// se anima al personaje
+		
+		//RENDER DE PERSONAJE
+		if (character_animation_on) {
 			// System.out.println("animation controller distinto null?"+(animation_controller!=null));
 
 			renderCharacter(character_shaderProgram);
@@ -273,28 +275,44 @@ public class MyGdxGame extends ApplicationAdapter {
 
 			}
 		}
-
 		
-		//SHADOW MAPPING2
-		for (Model model : objects) {
-			model.renderShadow(camera,GL20.GL_TRIANGLES,shadow_shaderProgram,directionalLight);
-		}
 		
 
-		for(ShaderProgram shader:shaders){
+
+		
+		//LOG DE ERRORES DE SHADERS
+		for (ShaderProgram shader : shaders) {
 			printShaderLog(shader);
 		}
 
 	}
 	
-	private void printShaderLog(ShaderProgram shader){
-		if(shader!=null){
-			String log=shader.getLog();
-			if(log.length()>0){
+	private void renderShadows(){
+		// SHADOW MAP
+		if (shadowBuffer == null)
+			shadowBuffer = new FrameBuffer(Format.RGBA8888, DEPTHMAPIZE, DEPTHMAPIZE, true);
+		shadowBuffer.begin();
+		
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		//
+		// s.getColorBufferTexture().bind();
+		//
+		for (Model model : objects) {
+			model.renderShadow(camera, GL20.GL_TRIANGLES, shadow_shaderProgram, directionalLight);
+		}
+		shadowBuffer.end();
+		//
+		
+	}
+
+	private void printShaderLog(ShaderProgram shader) {
+		if (shader != null) {
+			String log = shader.getLog();
+			if (log.length() > 0) {
 				System.out.println(log);
 			}
 		}
 	}
-	
 
 }

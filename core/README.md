@@ -133,3 +133,14 @@ Para comprobar la spotlight, poner un plano para ver el circulo. Segun jorge, ha
 ----
 En la pointlight hay como luz ambiente, la luz en si no se ve del color que deberia.
 ARREGLADO!
+
+---------
+
+
+20/11
+-----
+*En el shadow map las posiciones aparecen al reves.
+*En el shadow map desaparece la segunda nave.
+*En el shadow map las cosas mas cercas estan marcadas como mas lejos y viceversa!!!!.ARREGLADO
+
+
