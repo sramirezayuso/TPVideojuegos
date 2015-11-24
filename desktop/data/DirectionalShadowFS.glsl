@@ -8,42 +8,44 @@ uniform mat4 u_shadowVP;
 
 //iluminacion
 uniform vec3 LightPosW_3; // Light's position in world space.
- 
- 
 
 varying vec4 v_Position;
-varying w_position;
-uniform vec4 UP; 
+varying vec4 w_position;
+uniform mat4 VP; 
 
-const vec4 bitSh = vec4(256. * 256. * 256., 256. * 256., 256., 1.);
-const vec4 bitMsk = vec4(0.,vec3(1./256.0));
-const vec4 bitShifts = vec4(1.) / bitSh;
-
-vec4 pack (float depth) {
-    vec4 comp = fract(depth * bitSh);
-    comp -= comp.xxyz * bitMsk;
-    return comp;
+const vec4 bit_shift = vec4(256.0*256.0*256.0, 256.0*256.0, 256.0, 1.0);
+    const vec4 bit_mask  = vec4(0.0, 1.0/256.0, 1.0/256.0, 1.0/256.0);
+   
+vec4 pack_depth(const in float depth)
+{
+     vec4 res = fract(depth * bit_shift);
+    res -= res.xxyz * bit_mask;
+    return res;
 }
-float unpack (vec4 color) {
-    return dot(color , bitShifts);
+
+float unpack_depth(const in vec4 rgba_depth)
+{
+     float depth = dot(rgba_depth, bit_shift);
+    return depth;
 }
 
 void main()
 {
  vec4 LightPosW=vec4(LightPosW_3,1);
-	vec4 f_position=w_position*UP;//posicion del fragmento  respecto de la luz
-	float dist=distance(f_position,LightPosW)//distancia entre fragmento y la luz
+	vec4 f_position=w_position*VP;//posicion del fragmento  respecto de la luz
+	float dist=distance(f_position,LightPosW);//distancia entre fragmento y la luz
 	
 	vec4 shadowProj = u_shadowVP * w_position;
 	vec3 asdf = (shadowProj.xyz + vec3(1,1,1)) * 0.5; 
 	
-	float shadowmap_distance=unpack(texture2D(u_shadowMap, asdf.xy));
+	float shadowmap_distance=unpack_depth(texture2D(u_shadowMap, asdf.xy));
 	if(dist>shadowmap_distance)
 		gl_FragColor=vec4(1.0,1.0,1.0,1.0);
 	
 	gl_FragColor=vec4(0.0,0.0,0.0,0.0);
 	
-	//gl_FragColor = pack(gl_Position.z);
+	
+	// gl_FragColor = pack(gl_Position.z);
 }
 
 

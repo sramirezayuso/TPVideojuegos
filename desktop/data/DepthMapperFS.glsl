@@ -22,28 +22,34 @@ varying vec4 v_position;//coordenadas mundo
 uniform vec3 u_lightPosition;//coordenadas mundo
 
 varying vec4 v_Position;
-
-const vec4 bitSh = vec4(256. * 256. * 256., 256. * 256., 256., 1.);
-const vec4 bitMsk = vec4(0.,vec3(1./256.0));
-const vec4 bitShifts = vec4(1.) / bitSh;
-
-vec4 pack (float depth) {
-    vec4 comp = fract(depth * bitSh);
-    comp -= comp.xxyz * bitMsk;
-    return comp;
+   const vec4 bit_shift = vec4(256.0*256.0*256.0, 256.0*256.0, 256.0, 1.0);
+    const vec4 bit_mask  = vec4(0.0, 1.0/256.0, 1.0/256.0, 1.0/256.0);
+   
+vec4 pack_depth(const in float depth)
+{
+     vec4 res = fract(depth * bit_shift);
+    res -= res.xxyz * bit_mask;
+    return res;
 }
-float unpack (vec4 color) {
-    return dot(color , bitShifts);
+
+float unpack_depth(const in vec4 rgba_depth)
+{
+     float depth = dot(rgba_depth, bit_shift);
+    return depth;
 }
 
 void main()
 {
 	//gl_FragColor = pack(gl_Position.z);//de jorge
-	//float depth=1.0-((v_Position.z)/u_cameraFar);
 	
-	//gl_FragColor = depth*vec4(1.0,1.0,1.0,1.0);
 	
-	gl_FragColor = pack(gl_Position.z);
+	//float intensity=1.0-((v_Position.z)/u_cameraFar);
+	//vec4 packed1=pack_depth(intensity);
+	//float unpacked1=unpack_depth(packed1);
+	
+	//gl_FragColor = unpacked1*vec4(1.0,1.0,1.0,1.0);
+	
+	gl_FragColor = pack_depth(v_Position.z);
 }
 
 

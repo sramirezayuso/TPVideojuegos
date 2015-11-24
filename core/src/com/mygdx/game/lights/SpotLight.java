@@ -30,7 +30,7 @@ public class SpotLight extends Light {
 		
 		
 		shader.setUniformf("l_spotCutOff",m_SpotCutoff);
-		shader.setUniformf("otlightDirection_3",m_SpotDirection );
+		shader.setUniformf("spotlightDirection_3",m_SpotDirection );
 		
 	}
 

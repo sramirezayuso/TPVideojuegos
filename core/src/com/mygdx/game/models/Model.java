@@ -55,6 +55,15 @@ public abstract class Model {
 	public void renderShadow(ShaderProgram shader){
 		shader.setUniformMatrix("TRS",this.getModelMatrix() );
 	}
+	private Matrix4 getMVP(Cam camera){
+		Matrix4 modelMatrix = getModelMatrix();
+		Matrix4 viewProjection = camera.getVP();
+
+		Matrix4 res = new Matrix4(modelMatrix);
+		res.mul(viewProjection);
+		return res;
+	}
+	
 	public void render(List<Light> lights, Cam camera, int primitiveType) {
 
 		// //iluminacion, se hace una pasada por cada luz
@@ -65,17 +74,14 @@ public abstract class Model {
 			
 			Mesh mesh = getMesh();
 			Texture texture = getTexture();
+			
+			Matrix4 res = getMVP(camera);
 
-			Matrix4 modelMatrix = getModelMatrix();
-			Matrix4 viewProjection = camera.getVP();
-
-			Matrix4 res = new Matrix4(modelMatrix);
-			res.mul(viewProjection);
 			camera.setParameters(shader);
 			// modelMatrix.mul(viewProjection);
 			if (texture != null)
 				texture.bind();
-			shader.setUniformMatrix("u_m", modelMatrix);
+			shader.setUniformMatrix("u_m", getModelMatrix());
 			
 			
 			

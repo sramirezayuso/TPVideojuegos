@@ -58,6 +58,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	// shadows
 	ShaderProgram depthMapper;
+	ShaderProgram directional_shadow_shader;
 	DirectionalLight directionalLight;
 	FrameBuffer shadowBuffer;
 	public static final int DEPTHMAPIZE = 1024;
@@ -187,7 +188,9 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void create() {
-
+		directional_shadow_shader=createShader(dataFolder, 
+				"DirectionalShadowVS.glsl", 
+				"DirectionalShadowFS.glsl");
 		depthMapper = createShader(dataFolder, "DepthMapperVS.glsl", "DepthMapperFS.glsl");
 		directional_light_shaderProgram = createShader(dataFolder, "DirectionalLightsVS.glsl",
 				"DirectionalLightsFS.glsl");
@@ -196,10 +199,13 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		point_light_shaderProgram = createShader(dataFolder, "PointLightsVS.glsl", "PointLightsFS.glsl");
 
+		
+		
 		shaders.add(spot_light_shaderProgram);
 		shaders.add(point_light_shaderProgram);
 		shaders.add(directional_light_shaderProgram);
 		shaders.add(depthMapper);
+		shaders.add(directional_shadow_shader);
 
 		// objetos de la escena
 		spaceShip1 = new Ship(dataFolder, new Vector3(new float[] { 0f, 0f, 0f }));
@@ -259,6 +265,16 @@ public class MyGdxGame extends ApplicationAdapter {
 		renderShadows();
 		
 		
+//		//
+//		Gdx.gl.glClearColor(0, 0, 0, 1);
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+//		//
+//		// s.getColorBufferTexture().bind();
+//		//
+//		for (Model model : objects) {
+//			model.renderShadow(GL20.GL_TRIANGLES, depthMapper, directionalLight,camera);
+//		}
+//		//
 		
 		//RENDER DE LUCES
 		if (lights_on) {
@@ -301,17 +317,18 @@ public class MyGdxGame extends ApplicationAdapter {
 		// s.getColorBufferTexture().bind();
 		//
 		for (Model model : objects) {
-			model.renderShadow(GL20.GL_TRIANGLES, depthMapper, directionalLight);
+			model.renderShadow(GL20.GL_TRIANGLES, depthMapper, directionalLight);//se guardan las profundidades a la luz
 		}
 		shadowBuffer.end();
 		//
 		shadowBuffer.getColorBufferTexture().bind(1);
 
-		directional_light_shaderProgram.setUniformf("u_shadowmap",1);
+		directional_shadow_shader.setUniformf("u_shadowmap",1);
 	}
 
 	private void printShaderLog(ShaderProgram shader) {
 		if (shader != null) {
+			//System.out.println("vertex shader: "+name);
 			String log = shader.getLog();
 			if (log.length() > 0) {
 				System.out.println(log);
