@@ -54,7 +54,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Ship spaceShip2;
 	private List<Model> objects = new ArrayList<Model>();
 	private List<Light> lights = new ArrayList<Light>();
-	private boolean lights_on = false;
+	private boolean lights_on =false;
 
 	// shadows
 	ShaderProgram depthMapper;
@@ -258,6 +258,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		//RENDER DE SOMBRAS
 		renderShadows();
 		
+		
+		
 		//RENDER DE LUCES
 		if (lights_on) {
 			for (Model model : objects) {
@@ -299,11 +301,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		// s.getColorBufferTexture().bind();
 		//
 		for (Model model : objects) {
-			model.renderShadow(camera, GL20.GL_TRIANGLES, depthMapper, directionalLight);
+			model.renderShadow(GL20.GL_TRIANGLES, depthMapper, directionalLight);
 		}
 		shadowBuffer.end();
 		//
-		
+		shadowBuffer.getColorBufferTexture().bind(1);
+
+		directional_light_shaderProgram.setUniformf("u_shadowmap",1);
 	}
 
 	private void printShaderLog(ShaderProgram shader) {

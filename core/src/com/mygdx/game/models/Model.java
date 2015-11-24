@@ -30,30 +30,31 @@ public abstract class Model {
 
 	}
 
-	public void renderShadow(Cam camera,int primitiveType,ShaderProgram shader,DirectionalLight light){
+	public void renderShadow(int primitiveType,ShaderProgram shader,DirectionalLight light){
 		shader.begin();
-		Matrix4 modelMatrix = new Matrix4().translate(position);
-		Matrix4 viewProjection = camera.getVP();
+		Matrix4 modelMatrix = new Matrix4(getModelMatrix());
+		Matrix4 viewProjection = light.getVP();
 
-		Matrix4 res = new Matrix4(modelMatrix);
-		res.mul(viewProjection);
-		shader.setUniformMatrix("u_m", modelMatrix);
-		float u_cameraFar=camera.getFar();
+		//calcular mvp
+		Matrix4 mvp=modelMatrix.mul(viewProjection);
+		shader.setUniformMatrix("u_mvp", mvp);
 		
 		Texture texture = getTexture();
 		//texture.bind();//SHADOW MAP
+
+		shader.setUniformf("u_cameraFar", light.getFar());
 		
 		
-		
-		shader.setUniformf("u_cameraFar",u_cameraFar);
 		shader.setUniformf("u_lightPosition", light.getPosition());
 		
-		shader.setUniformMatrix("u_vp", viewProjection);
 		Mesh mesh = getMesh();
 		mesh.render(shader, primitiveType);
 		shader.end();
 	}
 	
+	public void renderShadow(ShaderProgram shader){
+		shader.setUniformMatrix("TRS",this.getModelMatrix() );
+	}
 	public void render(List<Light> lights, Cam camera, int primitiveType) {
 
 		// //iluminacion, se hace una pasada por cada luz
@@ -65,7 +66,7 @@ public abstract class Model {
 			Mesh mesh = getMesh();
 			Texture texture = getTexture();
 
-			Matrix4 modelMatrix = new Matrix4().translate(position);
+			Matrix4 modelMatrix = getModelMatrix();
 			Matrix4 viewProjection = camera.getVP();
 
 			Matrix4 res = new Matrix4(modelMatrix);
@@ -91,6 +92,10 @@ public abstract class Model {
 		}
 	}
 
+	protected Matrix4 getModelMatrix(){
+		return new Matrix4().translate(position);
+		
+	}
 	protected abstract Texture getTexture();
 
 	protected abstract Mesh getMesh();

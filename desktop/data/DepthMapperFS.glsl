@@ -21,13 +21,29 @@ uniform float u_cameraFar;
 varying vec4 v_position;//coordenadas mundo
 uniform vec3 u_lightPosition;//coordenadas mundo
 
+varying vec4 v_Position;
+
+const vec4 bitSh = vec4(256. * 256. * 256., 256. * 256., 256., 1.);
+const vec4 bitMsk = vec4(0.,vec3(1./256.0));
+const vec4 bitShifts = vec4(1.) / bitSh;
+
+vec4 pack (float depth) {
+    vec4 comp = fract(depth * bitSh);
+    comp -= comp.xxyz * bitMsk;
+    return comp;
+}
+float unpack (vec4 color) {
+    return dot(color , bitShifts);
+}
 
 void main()
 {
-//float intensity=length(v_position.xyz-u_lightPosition)/u_cameraFar;
-float factor=u_cameraFar/10.0;
-float intensity=1.0-length(v_position.xyz-u_lightPosition)/factor;
-gl_FragColor = intensity*vec4(1.0,1.0,1.0,1.0);
+	//gl_FragColor = pack(gl_Position.z);//de jorge
+	//float depth=1.0-((v_Position.z)/u_cameraFar);
+	
+	//gl_FragColor = depth*vec4(1.0,1.0,1.0,1.0);
+	
+	gl_FragColor = pack(gl_Position.z);
 }
 
 
