@@ -34,12 +34,13 @@ public class DirectionalLight extends Light {
 	}
 	public void setShadowParameters(ShaderProgram shader,Cam cam) {
 	
-		shader.setUniformf("TRS",m_SpotDirection );
+		//shader.setUniformf("TRS",m_SpotDirection );
 		Matrix4 VP=getVP();
 		
-		shader.setUniformMatrix("VP", VP);
 		
 		shader.setUniformMatrix("u_shadowVP", VP);
+		
+		shader.setUniformf("LightPosW_3",m_Position );
 		//FIX
 		//Matrix4 MVP=
 		//shader.setUniformf("u_mvp",cam.getVP());

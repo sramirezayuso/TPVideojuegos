@@ -30,7 +30,9 @@ public abstract class Model {
 
 	}
 
-	public void renderShadow(int primitiveType,ShaderProgram shader,DirectionalLight light){
+	
+	//render que se emplea para crear el shadow map
+	public void renderShadowMapping(int primitiveType,ShaderProgram shader,DirectionalLight light){
 		shader.begin();
 		Matrix4 modelMatrix = new Matrix4(getModelMatrix());
 		Matrix4 viewProjection = light.getVP();
@@ -47,13 +49,26 @@ public abstract class Model {
 		
 		shader.setUniformf("u_lightPosition", light.getPosition());
 		
-		Mesh mesh = getMesh();
-		mesh.render(shader, primitiveType);
+		renderMesh(shader, primitiveType);
 		shader.end();
 	}
+	private void renderMesh(ShaderProgram shader, int primitiveType){
+
+		Mesh mesh = getMesh();
+		mesh.render(shader, primitiveType);
+	}
 	
-	public void renderShadow(ShaderProgram shader){
+	
+	//render que se emplea para dibujar las sombras
+	public void renderShadow(ShaderProgram shader,DirectionalLight dir_light,Cam cam,int primitiveType){
+		shader.begin();
 		shader.setUniformMatrix("TRS",this.getModelMatrix() );
+		Matrix4 res = getMVP(cam);
+		
+		shader.setUniformMatrix("u_mvp", res);
+		dir_light.setShadowParameters(shader, cam);
+		renderMesh(shader, primitiveType);
+		shader.end();
 	}
 	private Matrix4 getMVP(Cam camera){
 		Matrix4 modelMatrix = getModelMatrix();
@@ -72,7 +87,7 @@ public abstract class Model {
 			shader.begin();
 			light.setParameters();
 			
-			Mesh mesh = getMesh();
+			
 			Texture texture = getTexture();
 			
 			Matrix4 res = getMVP(camera);
@@ -93,7 +108,7 @@ public abstract class Model {
 			material.setParameters(shader);
 			camera.setParameters(shader);
 
-			mesh.render(shader, primitiveType);
+			renderMesh(shader, primitiveType);
 			shader.end();
 		}
 	}

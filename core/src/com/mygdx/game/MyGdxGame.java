@@ -57,6 +57,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private boolean lights_on =false;
 
 	// shadows
+	private static final int PRIMITIVE_TYPE= GL20.GL_TRIANGLES;
 	ShaderProgram depthMapper;
 	ShaderProgram directional_shadow_shader;
 	DirectionalLight directionalLight;
@@ -261,8 +262,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 
-		//RENDER DE SOMBRAS
-		renderShadows();
+		//SE CREA EL SHADOW MAP
+		createShadowBuffer();
 		
 		
 //		//
@@ -279,7 +280,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		//RENDER DE LUCES
 		if (lights_on) {
 			for (Model model : objects) {
-				model.render(lights, camera, GL20.GL_TRIANGLES);
+				model.render(lights, camera, PRIMITIVE_TYPE);
 			}
 		}
 		
@@ -294,7 +295,11 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 		}
 		
-		
+		//SE PINTAN LAS SOMBRAS
+		for(Model model:objects){
+			model.renderShadow(directional_shadow_shader,directionalLight,camera,PRIMITIVE_TYPE);
+		}
+			
 
 
 		
@@ -305,7 +310,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	}
 	
-	private void renderShadows(){
+	private void createShadowBuffer(){
 		// SHADOW MAP
 		if (shadowBuffer == null)
 			shadowBuffer = new FrameBuffer(Format.RGBA8888, DEPTHMAPIZE, DEPTHMAPIZE, true);
@@ -317,7 +322,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		// s.getColorBufferTexture().bind();
 		//
 		for (Model model : objects) {
-			model.renderShadow(GL20.GL_TRIANGLES, depthMapper, directionalLight);//se guardan las profundidades a la luz
+			model.renderShadowMapping(GL20.GL_TRIANGLES, depthMapper, directionalLight);//se guardan las profundidades a la luz
 		}
 		shadowBuffer.end();
 		//
