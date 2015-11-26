@@ -102,7 +102,7 @@ public class Cam implements InputProcessor {
 															// vector.
 		Vector3 xaxis = (new Vector3(up).crs(zaxis)).nor();// The "right"
 															// vector.
-		Vector3 yaxis = new Vector3(zaxis).crs(xaxis); // The "up" vector.
+		Vector3 yaxis = new Vector3(zaxis).crs(xaxis).nor(); // The "up" vector.
 
 		// Create a 4x4 orientation matrix from the right, up, and forward
 		// vectors

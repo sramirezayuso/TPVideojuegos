@@ -41,7 +41,7 @@ public abstract class Model {
 		Matrix4 mvp=modelMatrix.mul(viewProjection);
 		shader.setUniformMatrix("u_mvp", mvp);
 		
-		Texture texture = getTexture();
+		//Texture texture = getTexture();
 		//texture.bind();//SHADOW MAP
 
 		shader.setUniformf("u_cameraFar", light.getFar());
@@ -62,7 +62,8 @@ public abstract class Model {
 	//render que se emplea para dibujar las sombras
 	public void renderShadow(ShaderProgram shader,DirectionalLight dir_light,Cam cam,int primitiveType){
 		shader.begin();
-		shader.setUniformMatrix("TRS",this.getModelMatrix() );
+		Matrix4 TRS=this.getModelMatrix();
+		shader.setUniformMatrix("TRS", TRS);
 		Matrix4 res = getMVP(cam);
 		
 		shader.setUniformMatrix("u_mvp", res);

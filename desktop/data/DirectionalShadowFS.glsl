@@ -5,11 +5,11 @@ varying vec2 v_texCoords;
 uniform sampler2D u_texture;
 uniform sampler2D u_shadowMap;
 uniform mat4 u_shadowVP;
-
+uniform mat4 TRS;
 //iluminacion
 uniform vec3 LightPosW_3; // Light's position in world space.
 
-varying vec4 v_Position;
+varying vec4 v_position;
 varying vec4 w_position;
 
 
@@ -32,7 +32,7 @@ float unpack_depth(const in vec4 rgba_depth)
 void main()
 {
  	vec4 LightPosW=vec4(LightPosW_3,1);
-	vec4 f_position=w_position* u_shadowVP;//posicion del fragmento  respecto de la luz
+	vec4 f_position=TRS*u_shadowVP*w_position;//posicion del fragmento  respecto de la luz (MVP)
 	float dist=distance(f_position,LightPosW);//distancia entre fragmento y la luz
 	
 	vec4 shadowProj = u_shadowVP * w_position;
@@ -40,14 +40,21 @@ void main()
 	
 	float shadowmap_distance=unpack_depth(texture2D(u_shadowMap, asdf.xy));
 	
-	gl_FragColor=vec4(1.0,1.0,1.0,1.0);
+	//gl_FragColor=vec4(1.0,1.0,1.0,1.0);
 	//if(dist>shadowmap_distance)
 	//	gl_FragColor=vec4(0.0,0.0,0.0,0.0);
 	
+	//probando
+	float difference=(dist-shadowmap_distance)/10.0;
+		
 	
 	
+	gl_FragColor=vec4(0.0,0.0,0.0,0.0);
+	//if(dist>(shadowmap_distance+2.5))
+	//	gl_FragColor=vec4(1.0,1.0,1.0,1.0);;
 	
-	
+	//gl_FragColor=difference*vec4(1.0,1.0,1.0,1.0);
+	gl_FragColor=(shadowmap_distance/2.5)*vec4(1.0,1.0,1.0,1.0);
 }
 
 
