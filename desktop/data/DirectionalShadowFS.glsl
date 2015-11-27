@@ -30,10 +30,10 @@ float unpack_depth(const in vec4 rgba_depth)
 }
 
 void main()
-{
+{// JORGE DICE : tenes que comparar f_position.z contra shadowmap distance
  	vec4 LightPosW=vec4(LightPosW_3,1);
 	vec4 f_position=TRS*u_shadowVP*w_position;//posicion del fragmento  respecto de la luz (MVP)
-	float dist=distance(f_position,LightPosW);//distancia entre fragmento y la luz
+	float dist=-f_position.z;//distancia entre fragmento y la luz(da negativo para la escena)
 	
 	vec4 shadowProj =TRS* u_shadowVP * w_position;
 	vec3 asdf = (shadowProj.xyz + vec3(1,1,1)) * 0.5; 
@@ -49,15 +49,20 @@ void main()
 		
 	
 	
-	//gl_FragColor=vec4(0.0,0.0,0.0,0.0);
-	//if(dist>(shadowmap_distance/100.0))
-	//	gl_FragColor=vec4(1.0,1.0,1.0,1.0);;
-	
-	gl_FragColor=difference*vec4(1.0,1.0,1.0,1.0);
-	//gl_FragColor=(shadowmap_distance/5.0)*vec4(1.0,1.0,1.0,1.0);
 	gl_FragColor=vec4(0.0,0.0,0.0,0.0);
+	if(dist<(shadowmap_distance))
+		gl_FragColor=vec4(1.0,1.0,1.0,1.0);;
+	
+	//gl_FragColor=(dist*10.0)*vec4(1.0,1.0,1.0,1.0);
+	//gl_FragColor=(shadowmap_distance/5.0)*vec4(1.0,1.0,1.0,1.0);
+	//gl_FragColor=vec4(0.0,0.0,0.0,0.0);
 	//if(difference>0.0)
-		gl_FragColor=difference*vec4(1.0,1.0,1.0,1.0);;
+		//gl_FragColor=difference*vec4(1.0,1.0,1.0,1.0);;
+	
+		//gl_FragColor=(dist)*vec4(1.0,1.0,1.0,1.0);
+	
+		
+	
 	
 }
 	

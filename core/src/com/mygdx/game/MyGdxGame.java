@@ -321,6 +321,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		// SHADOW MAP
 		if (shadowBuffer == null)
 			shadowBuffer = new FrameBuffer(Format.RGBA8888, DEPTHMAPIZE, DEPTHMAPIZE, true);
+
 		shadowBuffer.begin();
 		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
