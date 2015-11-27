@@ -63,6 +63,8 @@ public abstract class Model {
 	public void renderShadow(ShaderProgram shader,DirectionalLight dir_light,Cam cam,int primitiveType){
 		shader.begin();
 		Matrix4 TRS=this.getModelMatrix();
+		
+		
 		shader.setUniformMatrix("TRS", TRS);
 		Matrix4 res = getMVP(cam);
 		

@@ -20,20 +20,23 @@ uniform float u_cameraFar;
 varying vec4 v_position;//coordenadas mundo
 uniform vec3 u_lightPosition;//coordenadas mundo
 
-   const vec4 bit_shift = vec4(256.0*256.0*256.0, 256.0*256.0, 256.0, 1.0);
-    const vec4 bit_mask  = vec4(0.0, 1.0/256.0, 1.0/256.0, 1.0/256.0);
-   
-vec4 pack_depth(const in float depth)
+ 
+ //fuente de funciones de pack:http://www.ozone3d.net/blogs/lab/20080604/glsl-float-to-rgba8-encoder/
+ 
+ vec4 pack_depth(const float value)
 {
-     vec4 res = fract(depth * bit_shift);
-    res -= res.xxyz * bit_mask;
-    return res;
+  const vec4 bitSh = vec4(256.0*256.0*256.0, 256.0*256.0, 256.0, 1.0);
+  const vec4 bitMsk = vec4(0.0, 1.0/256.0, 1.0/256.0, 1.0/256.0);
+  vec4 res = fract(value * bitSh);
+  res -= res.xxyz * bitMsk;
+  return res;
 }
-
-float unpack_depth(const in vec4 rgba_depth)
+ 
+ 
+ float unpack_depth(const vec4 value)
 {
-     float depth = dot(rgba_depth, bit_shift);
-    return depth;
+  const vec4 bitSh = vec4(1.0/(256.0*256.0*256.0), 1.0/(256.0*256.0), 1.0/256.0, 1.0);
+  return(dot(value, bitSh));
 }
 
 void main()
@@ -42,15 +45,18 @@ void main()
 	
 	
 	//float intensity=1.0-((v_position.z)/u_cameraFar);
-	//vec4 packed1=pack_depth(intensity);
-	//float unpacked1=unpack_depth(packed1);
+	vec4 packed1=pack_depth( (v_position.z)*(-1.0));
+	float unpacked1=unpack_depth(packed1);
 	
 	//gl_FragColor = unpacked1*vec4(1.0,1.0,1.0,1.0);
 	//gl_FragColor = pack_depth(normalizedDistance);
 	
+	//gl_FragColor = vec4(0.0,0.0,0.0,0.0);
 	
-	gl_FragColor = (pack_depth(v_position.z))*(-1.0);
+	gl_FragColor = pack_depth(v_position.z);
 	//gl_FragColor = ( v_position.z*(-1.0))*vec4(1.0,1.0,1.0,1.0);
+	//gl_FragColor = ( unpacked1)*vec4(1.0,1.0,1.0,1.0);
+		
 }
 
 
