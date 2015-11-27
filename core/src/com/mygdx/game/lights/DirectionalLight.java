@@ -23,7 +23,7 @@ public class DirectionalLight extends Light {
 		super.setParameters();
 		shader.setUniformf("spotlightDirection_3", m_SpotDirection);
 	}
-
+	//setean parametros al dibujar la sombra
 	public void setShadowParameters(ShaderProgram shader, Cam cam) {
 
 		// shader.setUniformf("TRS",m_SpotDirection );
@@ -32,6 +32,9 @@ public class DirectionalLight extends Light {
 		shader.setUniformMatrix("u_shadowVP", VP);
 
 		shader.setUniformf("LightPosW_3", m_Position);
+		
+		shader.setUniformf("u_lightFar", z_far);
+		shader.setUniformf("u_lightNear", z_near);
 		// FIX
 		// Matrix4 MVP=
 		// shader.setUniformf("u_mvp",cam.getVP());
@@ -64,7 +67,7 @@ public class DirectionalLight extends Light {
 
 	public Matrix4 getVP() {
 		Matrix4 V = getV();
-		Matrix4 P = OrthographicProjection.getProjection(2, 2, z_far, z_near);
+		Matrix4 P = getP();
 		return P.mul(V);
 	}
 
@@ -111,5 +114,20 @@ public class DirectionalLight extends Light {
 				zaxis.y, zaxis.z, 0, eye.x, eye.y, eye.z, 1 });
 		return W.inv();
 	}
+
+	public Matrix4 getP() {
+		return OrthographicProjection.getProjection(2, 2, z_far, z_near);
+	}
+
+	public float getZ_near() {
+		return z_near;
+	}
+
+	
+	public float getZ_far() {
+		return z_far;
+	}
+
+	
 
 }

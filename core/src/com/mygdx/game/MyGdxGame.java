@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.Renderable;
+import com.badlogic.gdx.graphics.g3d.environment.ShadowMap;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -235,10 +236,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		// float[] { 6f, 10f, 0.2f }), new Vector3(
 		// new float[] { 0f, 1f, 0f }), new Vector3(new float[] { 0.0f, -0.1f,
 		// 0.0f })));
-		float x=0.2f;
+		float x=-1f;
 		float z=0.1f;
 		directionalLight = new DirectionalLight(directional_light_shaderProgram, 
-				new Vector3(new float[] { x, 2f, z }), 
+				new Vector3(new float[] { x, 3f, z }), 
 				new Vector3(new float[] { x, 0f, z }), 
 				new Vector3(new float[] {1f, 1f, 1f }));
 		lights.add(directionalLight);
@@ -303,6 +304,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		
 		if(shadows_on &&! DEBUGGING_DEPTHMAP){
+			Texture tex=shadowBuffer.getColorBufferTexture();
+			int num=tex.getTextureObjectHandle();
+			tex.bind(num);
+			
+			
+			directional_shadow_shader.setUniformi("u_shadowmap",num);
+		
+			
 			//SE PINTAN LAS SOMBRAS
 			for(Model model:objects){
 				
@@ -336,11 +345,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		if(!DEBUGGING_DEPTHMAP){
 		shadowBuffer.end();
-		Texture tex=shadowBuffer.getColorBufferTexture();
-		tex.bind(1);
-
-		directional_shadow_shader.setUniformf("u_shadowmap",1);
-		}}
+			}}
 
 	private void printShaderLog(ShaderProgram shader) {
 		if (shader != null) {

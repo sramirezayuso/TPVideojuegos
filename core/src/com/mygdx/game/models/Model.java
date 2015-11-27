@@ -36,15 +36,16 @@ public abstract class Model {
 		shader.begin();
 		Matrix4 modelMatrix = new Matrix4(getModelMatrix());
 		Matrix4 viewProjection = light.getVP();
-
+		Matrix4 projection=light.getP();
 		//calcular mvp
 		Matrix4 mvp=modelMatrix.mul(viewProjection);
 		shader.setUniformMatrix("u_mvp", mvp);
-		
+		shader.setUniformMatrix("u_p", mvp);
 		//Texture texture = getTexture();
 		//texture.bind();//SHADOW MAP
 
-		shader.setUniformf("u_cameraFar", light.getFar());
+		shader.setUniformf("u_lightFar", light.getFar());
+		shader.setUniformf("u_lightNear", light.getZ_near());
 		
 		
 		shader.setUniformf("u_lightPosition", light.getPosition());

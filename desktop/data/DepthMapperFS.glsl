@@ -16,7 +16,8 @@ uniform vec3 MaterialDiffuse_3;
 uniform vec3 MaterialSpecular_3;
 uniform float MaterialShininess; 
 
-uniform float u_cameraFar;
+uniform float u_lightFar;
+uniform float u_lightNear;
 varying vec4 v_position;//coordenadas mundo
 uniform vec3 u_lightPosition;//coordenadas mundo
 
@@ -41,6 +42,9 @@ uniform vec3 u_lightPosition;//coordenadas mundo
 
 void main()
 {
+	float LinearDepthConstant = 1.0 / ( u_lightFar -  u_lightNear);
+	
+
 	//gl_FragColor = pack(gl_Position.z);//de jorge
 	
 	
@@ -53,9 +57,15 @@ void main()
 	
 	//gl_FragColor = vec4(0.0,0.0,0.0,0.0);
 	
-	gl_FragColor = pack_depth(v_position.z);
+	//gl_FragColor = pack_depth(v_position.z);
 	//gl_FragColor = ( v_position.z*(-1.0))*vec4(1.0,1.0,1.0,1.0);
 	//gl_FragColor = ( unpacked1)*vec4(1.0,1.0,1.0,1.0);
+	
+	float linearDepth = length(v_position) * LinearDepthConstant;
+	gl_FragColor = pack_depth(linearDepth);
+	//gl_FragColor = ( linearDepth*10.0)*vec4(1.0,1.0,1.0,1.0);
+	//if(linearDepth>0.0)
+		//gl_FragColor=vec4(1.0,1.0,1.0,1.0);
 		
 }
 
