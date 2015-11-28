@@ -35,7 +35,7 @@ void main()
 	float dist=f_position.z;//distancia entre fragmento y la luz(da negativo para la escena)
 	
 	vec4 shadowProj =TRS* u_shadowVP * w_position;
-	vec3 asdf = (shadowProj.xyz + vec3(1,1,1)) * 0.5; 
+	vec3 asdf = (shadowProj.xyz ) * 0.5+ vec3(0.5,0.5,0.5); 
 	
 	float shadowmap_distance=unpack_depth(texture2D(u_shadowMap, asdf.xy));
 	
@@ -48,7 +48,7 @@ void main()
 		
 	
 	
-	gl_FragColor=vec4(0.0,0.0,0.0,0.0);
+	//gl_FragColor=vec4(0.0,0.0,0.0,0.0);
 	//if(dist<(shadowmap_distance))
 		//gl_FragColor=vec4(1.0,1.0,1.0,1.0);;
 	
@@ -60,9 +60,15 @@ void main()
 	
 	
 	//gl_FragColor=(1.0+dist)*vec4(1.0,1.0,1.0,1.0);
-	if(shadowmap_distance==1.0) //siempre ocurre
+	//if( asdf.x<=1.0)
+	//	gl_FragColor=vec4(1.0,1.0,1.0,1.0);
+	//else
+	//	gl_FragColor=vec4(0.0,0.0,0.0,0.0);
+	
+	if(shadowmap_distance==1.0)
 		gl_FragColor=vec4(1.0,1.0,1.0,1.0);
-		
+	else
+		gl_FragColor=vec4(0.0,0.0,0.0,0.0);
 	
 	
 }
