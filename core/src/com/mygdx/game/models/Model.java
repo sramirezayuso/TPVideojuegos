@@ -65,15 +65,20 @@ public abstract class Model {
 	public void renderShadow(ShaderProgram shader,DirectionalLight dir_light,Cam cam,int primitiveType){
 		shader.begin();
 		
-
-		shader.setUniformi("u_shadowmap",1);
-		Matrix4 mvp_cam = getMVP(cam);
+		setShadowParameters(shader, cam);
 		
-		shader.setUniformMatrix("u_mvp_cam", mvp_cam);
 		dir_light.setShadowParameters(shader, cam,getModelMatrix());
 		renderMesh(shader, primitiveType);
 		shader.end();
 	}
+	
+	private void setShadowParameters(ShaderProgram shader,Cam cam){
+		shader.setUniformi("u_shadowmap",1);
+		Matrix4 mvp_cam = getMVP(cam);
+		
+		shader.setUniformMatrix("u_mvp_cam", mvp_cam);
+	}
+	
 	private Matrix4 getMVP(Cam camera){
 		Matrix4 modelMatrix = getModelMatrix();
 		Matrix4 viewProjection = camera.getVP();
@@ -89,7 +94,8 @@ public abstract class Model {
 		for (Light light : lights) {
 			ShaderProgram shader = light.getShader();
 			shader.begin();
-			light.setParameters();
+			Matrix4 modelMatrix=getModelMatrix();
+			light.setParameters(modelMatrix,camera);
 			
 			
 			Texture texture = getTexture();
@@ -100,7 +106,7 @@ public abstract class Model {
 			// modelMatrix.mul(viewProjection);
 			if (texture != null)
 				texture.bind();
-			shader.setUniformMatrix("u_m", getModelMatrix());
+			shader.setUniformMatrix("u_m", modelMatrix);
 			
 			
 			

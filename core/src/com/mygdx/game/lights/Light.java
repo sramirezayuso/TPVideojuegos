@@ -2,7 +2,9 @@ package com.mygdx.game.lights;
 
 import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.cameras.Cam;
 
 public class Light {
 	/* LightParameter */
@@ -63,7 +65,7 @@ public class Light {
 		this.m_light_color=m_light_color;
 	}
 
-	public void setParameters() {
+	public void setParameters(Matrix4 modelMatrix,Cam cam) {
 		
 		shader.setUniformf("LightPosW_3",m_Position );
 		

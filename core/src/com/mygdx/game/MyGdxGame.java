@@ -54,7 +54,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Ship spaceShip2;
 	private List<Model> objects = new ArrayList<Model>();
 	private List<Light> lights = new ArrayList<Light>();
-	private boolean lights_on =false;
+	private boolean lights_on =true;
 
 	// shadows
 	private static final int PRIMITIVE_TYPE= GL20.GL_TRIANGLES;
@@ -63,7 +63,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	DirectionalLight directionalLight;
 	FrameBuffer shadowBuffer;
 	public static final int DEPTHMAPIZE = 1024;
-	private boolean shadows_on=true;
+	private boolean shadows_on=false;
 	private static boolean DEBUGGING_DEPTHMAP=false;
 	
 	private ShaderProgram createShader(String dataFolder, String VSfilename, String FSfilename) {
@@ -206,7 +206,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		shaders.add(spot_light_shaderProgram);
 		shaders.add(point_light_shaderProgram);
-		shaders.add(directional_light_shaderProgram);
+		//shaders.add(directional_light_shaderProgram);
 		shaders.add(depthMapper);
 		shaders.add(directional_shadow_shader);
 
@@ -302,17 +302,17 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		
 		
-		if(shadows_on &&! DEBUGGING_DEPTHMAP){
-			//SE PINTAN LAS SOMBRAS
-			for(Model model:objects){
-				shadowBuffer.getColorBufferTexture().bind(1);
-				model.renderShadow(directional_shadow_shader
-						,directionalLight
-						,camera
-						,PRIMITIVE_TYPE
-										);
-			}
-		}	
+//		if(shadows_on &&! DEBUGGING_DEPTHMAP){
+//			//SE PINTAN LAS SOMBRAS
+//			for(Model model:objects){
+//				shadowBuffer.getColorBufferTexture().bind(1);
+//				model.renderShadow(directional_shadow_shader
+//						,directionalLight
+//						,camera
+//						,PRIMITIVE_TYPE
+//										);
+//			}
+//		}	
 
 
 		
@@ -342,7 +342,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			//ScreenshotFactory.saveScreenshot(shadowBuffer.getWidth(),shadowBuffer.getHeight(),"testing_depthmap");
 	
 		shadowBuffer.end();
-		
+		shadowBuffer.getColorBufferTexture().bind(1);
 		
 		Texture tex=shadowBuffer.getColorBufferTexture();
 //		tex.bind(1);

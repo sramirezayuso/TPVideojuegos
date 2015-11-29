@@ -2,7 +2,9 @@ package com.mygdx.game.lights;
 
 import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.cameras.Cam;
 
 public class SpotLight extends Light {
 	static float cutoff=(float) Math.toRadians(45.0);
@@ -25,8 +27,8 @@ public class SpotLight extends Light {
     			}
 	
 	@Override
-	public void setParameters() {
-		super.setParameters();
+	public void setParameters(Matrix4 modelMatrix,Cam cam) {
+		super.setParameters(modelMatrix,cam);
 		
 		
 		shader.setUniformf("l_spotCutOff",m_SpotCutoff);

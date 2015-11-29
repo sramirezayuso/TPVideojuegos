@@ -20,10 +20,11 @@ public class DirectionalLight extends Light {
 	}
 
 	@Override
-	public void setParameters() {
+	public void setParameters(Matrix4 modelMatrix,Cam cam) {
 		// TODO Auto-generated method stub
-		super.setParameters();
+		super.setParameters(modelMatrix,cam);
 		shader.setUniformf("spotlightDirection_3", m_SpotDirection);
+		//setShadowParameters(shader, cam, modelMatrix);
 	}
 
 	public void setShadowParameters(ShaderProgram shader, Cam cam,Matrix4 modelMatrix) {

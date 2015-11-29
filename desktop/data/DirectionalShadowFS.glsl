@@ -3,11 +3,21 @@
 varying vec4 v_color; 
 varying vec2 v_texCoords;
 uniform sampler2D u_shadowMap;
+uniform sampler2D u_texture;
 
-uniform mat4 TRS;
+
 //iluminacion
+varying vec4 v2f_normalW; 
+varying vec4 v2f_positionW;
+uniform vec3 EyePosW3;   // Eye position in world space.
 uniform vec3 LightPosW_3; // Light's position in world space.
-
+uniform vec3 LightColor_3; // Light's diffuse and specular contribution.
+ 
+uniform vec3 MaterialEmissive_3;
+uniform vec3 MaterialDiffuse_3;
+uniform vec3 MaterialSpecular_3;
+uniform float MaterialShininess;  
+ 
 varying vec4 v_position;
 varying vec4 w_position;
 
@@ -28,8 +38,10 @@ vec4 pack_depth(const float value)
   return(dot(value, bitSh));
 }
 
-void main()
-{//  tenes que comparar f_position.z contra shadowmap distance
+float getVisibility(){
+	float ans=1.0;
+	
+//  tenes que comparar f_position.z contra shadowmap distance
  	vec4 LightPosW=vec4(LightPosW_3,1);
 	
 	
@@ -40,52 +52,64 @@ void main()
 	
 	float shadowmap_distance=unpack_depth(texture2D(u_shadowMap, shadow_cord.xy));
 	
-	//gl_FragColor=vec4(1.0,1.0,1.0,1.0);
-	//if(dist>shadowmap_distance)
-	//	gl_FragColor=vec4(0.0,0.0,0.0,0.0);
 	
-	//probando
+	
 	float difference=(shadowmap_distance-dist);
 		
 	
 	
 	
-	//if(dist>(shadowmap_distance))
-	//	gl_FragColor=vec4(0.0,0.0,0.0,0.0);
-	//else 
-	//	gl_FragColor=vec4(1.0,1.0,1.0,1.0);
 	
-	//gl_FragColor=(-dist)*vec4(1.0,1.0,1.0,1.0);
-	//gl_FragColor=(shadowmap_distance/5.0)*vec4(1.0,1.0,1.0,1.0);
-	//gl_FragColor=vec4(0.0,0.0,0.0,0.0);
 	
 	if(shadow_cord.x>0.0 
 		&& shadow_cord.x<1.0 
 		&& shadow_cord.y>0.0 
 		&& shadow_cord.y<1.0
-		&& !(difference>0.0 && difference<0.1)) //esta en la sombra
-		gl_FragColor=vec4(1.0,1.0,1.0,1.0);
-	else
-		gl_FragColor=vec4(0.0,0.0,0.0,0.0);
+		&& !(difference>0.0 && difference<0.1)){ //esta en la sombra
+		ans=0.1;
+		}
+	else{
+		ans=1.0;
+		}
 	
-	//gl_FragColor=(1.0+dist)*vec4(1.0,1.0,1.0,1.0);
-	//vec4 aux=texture2D(u_shadowMap, shadow_cord.xy);
-	
-	//if( shadow_cord.x>0.0 && shadow_cord.x<1.0 && shadow_cord.y>0.0 && shadow_cord.y<1.0)
-	//		gl_FragColor=vec4(1.0,1.0,1.0,1.0);
-	//else
-	//	gl_FragColor=vec4(0.0,0.0,0.0,0.0);
-	
-	//if((shadowmap_distance)<1.1 &&(shadowmap_distance)>0.0)
-	//	gl_FragColor=vec4(1.0,1.0,1.0,1.0);
-	//else
-	//	gl_FragColor=vec4(0.0,0.0,0.0,0.0);
-	//gl_FragColor=difference*vec4(1.0,1.0,1.0,1.0);
-	
-	
-	
-	//gl_FragColor=(-dist)*vec4(1.0,1.0,1.0,1.0);
-	//gl_FragColor=vec4(aux.x,aux.y,aux.z,0.0);
+	return ans;
+
+}
+
+void main()
+{
+vec4 LightPosW=vec4( LightPosW_3,1);
+vec4 LightColor=vec4 (LightColor_3,1);
+
+vec4 MaterialSpecular=vec4(MaterialSpecular_3,1);
+vec4 MaterialDiffuse= vec4(MaterialDiffuse_3,1);	
+
+
+//http://www.lighthouse3d.com/tutorials/glsl-tutorial/directional-lights-per-pixel/
+
+// set the specular term to black
+    vec4 spec = vec4(0.0);
+ 
+    // normalize both input vectors
+    vec3 n = v2f_normalW.xyz;
+    vec3 e = normalize(vec3(EyePosW3));
+ 	vec3 l_dir= vec3(LightPosW_3 - v2f_positionW.xyz);
+ 	l_dir=normalize(l_dir);
+    float intensity = max(dot(n,l_dir), 0.0);
+ 
+    // if the vertex is lit compute the specular color
+    if (intensity > 0.0) {
+        // compute the half vector
+        vec3 h = normalize(l_dir + e);  
+        // compute the specular term into spec
+        float intSpec = max(dot(h,n), 0.0);
+        spec =MaterialSpecular * pow(intSpec,MaterialShininess);
+    }
+    
+    float visibility=getVisibility();
+   gl_FragColor = (visibility*intensity *  MaterialDiffuse + spec)* texture2D(u_texture, v_texCoords);
+
+
 	
 }
 	
