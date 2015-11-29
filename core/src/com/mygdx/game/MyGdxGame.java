@@ -40,7 +40,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	ShaderProgram directional_light_shaderProgram;
 	// character
 	ShaderProgram character_shaderProgram;
-	Vector3 characterPosition = new Vector3(new float[] { 0f, 0f, -1f });
+	Vector3 characterPosition = new Vector3(new float[] { 0f, 0f, -2f });
 	AnimationController animation_controller;
 	ModelInstance character_model_instance;
 	boolean isInitialized = false;
@@ -211,14 +211,28 @@ public class MyGdxGame extends ApplicationAdapter {
 		shaders.add(depthMapper);
 		shaders.add(directional_shadow_shader);
 
-		// objetos de la escena
+		// objetos de la escena central [LUZ DIRECCIONAL]
 		spaceShip1 = new Ship(dataFolder, new Vector3(new float[] { 0f, 0f, 0f }));
 		spaceShip2 = new Ship(dataFolder, new Vector3(new float[] { 1f, 0f, 0f }));
 		objects.add(spaceShip1);
 		objects.add(spaceShip2);
-
 		Cube cube = new Cube(dataFolder, new Vector3(new float[] { 0f, -0.8f, 0.5f }));
 		objects.add(cube);
+
+		
+		
+		//objetos de la escena derecha [SPOTLIGHT]
+		objects.add(new Ship(dataFolder, new Vector3(new float[] { 2f, 0f, 0f })));
+		objects.add(new Ship(dataFolder, new Vector3(new float[] { 3f, 0f, 0f })));
+		objects.add(new Cube(dataFolder, new Vector3(new float[] { 2f, -0.8f, 0.5f })));
+		
+		
+		//objetos de la escena izquierda [POINTLIGHT]
+		objects.add(new Ship(dataFolder, new Vector3(new float[] { -1f, 0f, 0f })));
+		objects.add(new Ship(dataFolder, new Vector3(new float[] { -2f, 0f, 0f })));
+		objects.add(new Cube(dataFolder, new Vector3(new float[] { -2f, -0.8f, 0.5f })));
+//		
+		
 		// camara
 
 		camera = new OrthographicCam(this);
@@ -228,21 +242,23 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.setPosition(cam_pos);
 
 		// luces
-		// lights.add(new PointLight(point_light_shaderProgram, new Vector3(new
-		// float[] { 0f, 1f, 0.1f }), new Vector3(
-		// new float[] { 1f, 0f, 0f })));
-		//
-		// lights.add(new SpotLight(spot_light_shaderProgram, new Vector3(new
-		// float[] { 6f, 10f, 0.2f }), new Vector3(
-		// new float[] { 0f, 1f, 0f }), new Vector3(new float[] { 0.0f, -0.1f,
-		// 0.0f })));
-		float x=-0.3f;
-		float z=-0.8f;
-		directionalLight = new DirectionalLight(directional_shadow_shader,
-				new Vector3(new float[] { x, 5f, z }), 
-				new Vector3(new float[] { x, 0f, z }), 
-				new Vector3(new float[] {1f, 1f, 1f }));
-		lights.add(directionalLight);
+//		 lights.add(new PointLight(point_light_shaderProgram, new Vector3(new
+//		 float[] { 6f, 1f, 0.1f }), new Vector3(
+//		 new float[] { 1f, 0f, 0f })));
+	
+		 lights.add(new SpotLight(spot_light_shaderProgram, new Vector3(new
+		 float[] { 0f, 10f, 0.2f }), new Vector3(
+		 new float[] { 0f, 1f, 0f }), new Vector3(new float[] { 0f, -0.1f,
+		 0.0f })));
+//		
+		
+//		float x=-0.3f;
+//		float z=-0.8f;
+//		directionalLight = new DirectionalLight(directional_shadow_shader,
+//				new Vector3(new float[] { x, 5f, z }), 
+//				new Vector3(new float[] { x, 0f, z }), 
+//				new Vector3(new float[] {1f, 1f, 1f }));
+//		lights.add(directionalLight);
 		// personaje
 
 		createCharacter();
@@ -337,6 +353,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl20.glDisable(GL20.GL_BLEND);
 		for (Model model : objects) {
+			if(directionalLight!=null)
 			model.renderShadowMapping(GL20.GL_TRIANGLES, depthMapper, directionalLight);//se guardan las profundidades a la luz
 		}
 		

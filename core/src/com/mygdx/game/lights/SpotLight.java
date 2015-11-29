@@ -12,7 +12,8 @@ public class SpotLight extends Light {
 	
     	public SpotLight(ShaderProgram shader,Vector3 postion,Vector3 ligh_color,Vector3 direction) {
     		
-    		super(shader,GL_LIGHT0
+    		super(shader
+    				,GL_LIGHT0
     		         , new Vector3(new float[]{ 0.0f, 0.0f, 0.0f })
     		         , new Vector3(new float[]{ 1.0f, 1.0f, 1.0f })
     		         , new Vector3(new float[]{ 1.0f, 1.0f, 1.0f})
