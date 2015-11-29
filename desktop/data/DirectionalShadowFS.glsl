@@ -65,8 +65,9 @@ float getVisibility(){
 		&& shadow_cord.x<1.0 
 		&& shadow_cord.y>0.0 
 		&& shadow_cord.y<1.0
-		&& !(difference>0.0 && difference<0.1)){ //esta en la sombra
-		ans=0.1;
+		&& !(difference>=0.0 && difference<0.1)){ //esta en la sombra
+			
+			ans=0.5;
 		}
 	else{
 		ans=1.0;
@@ -106,10 +107,10 @@ vec4 MaterialDiffuse= vec4(MaterialDiffuse_3,1);
         spec =MaterialSpecular * pow(intSpec,MaterialShininess);
     }
     
-    float visibility=getVisibility();
+  	 float visibility=getVisibility();
    gl_FragColor = (visibility*intensity *  MaterialDiffuse + spec)* texture2D(u_texture, v_texCoords);
 
-
+ 
 	
 }
 	

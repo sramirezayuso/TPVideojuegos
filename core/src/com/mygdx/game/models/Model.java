@@ -110,7 +110,7 @@ public abstract class Model {
 			
 			
 			
-			shader.setUniformMatrix("u_mvp", res);
+			shader.setUniformMatrix("u_mvp_cam", res);
 			shader.setUniformi("u_texture", 0);
 
 			// iluminacion

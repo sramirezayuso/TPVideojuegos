@@ -238,8 +238,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		// 0.0f })));
 		float x=-0.3f;
 		float z=-0.8f;
-		directionalLight = new DirectionalLight(directional_light_shaderProgram, 
-				new Vector3(new float[] { x, 1f, z }), 
+		directionalLight = new DirectionalLight(directional_shadow_shader,
+				new Vector3(new float[] { x, 5f, z }), 
 				new Vector3(new float[] { x, 0f, z }), 
 				new Vector3(new float[] {1f, 1f, 1f }));
 		lights.add(directionalLight);
