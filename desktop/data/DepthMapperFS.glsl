@@ -50,7 +50,7 @@ void main()
 	vec4 packed1=pack_depth((-1.0)* v_position.z);
 	float unpacked1=unpack_depth(packed1);
 	
-	//gl_FragColor = unpacked1*vec4(1.0,1.0,1.0,1.0);
+	gl_FragColor = unpacked1*vec4(1.0,1.0,1.0,1.0);
 	//gl_FragColor = pack_depth(normalizedDistance);
 	
 	//gl_FragColor = vec4(0.0,0.0,0.0,0.0);
@@ -59,7 +59,7 @@ void main()
 	//gl_FragColor = ( v_position.z)*vec4(1.0,1.0,1.0,1.0);
 	
 	
-	gl_FragColor = packed1;
+	//gl_FragColor = packed1;
 	
 }
 

@@ -8,7 +8,7 @@ public class MetallicMaterial extends Material {
 		super(new Vector3(new float[]{ 0f, 0f, 0f})
 	            , new Vector3(new float[]{1f, 1f, 1f})
 	            , new Vector3(new float[]{0.0f, 0.0f, 0.0f})
-	            , new Vector3(new float[]{0.5f, 0.5f, 0.5f})
+	            , new Vector3(new float[]{0f, 0f, 0f})
 	            ,  1f);
 	}
 

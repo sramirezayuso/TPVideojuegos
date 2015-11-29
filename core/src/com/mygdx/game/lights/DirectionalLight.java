@@ -29,6 +29,7 @@ public class DirectionalLight extends Light {
 	}
 
 	public void setShadowParameters(ShaderProgram shader, Cam cam,Matrix4 modelMatrix, FrameBuffer shadowbuffer) {
+		if(shadowbuffer!=null){
 		shadowbuffer.getColorBufferTexture().bind(1);
 		shader.setUniformf("u_shadowmap",1);
 		// shader.setUniformf("TRS",m_SpotDirection );
@@ -44,7 +45,7 @@ public class DirectionalLight extends Light {
 		// FIX
 		// Matrix4 MVP=
 		// shader.setUniformf("u_mvp",cam.getVP());
-
+		}
 	}
 
 	private Vector3 getUpVector() {

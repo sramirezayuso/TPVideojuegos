@@ -50,9 +50,8 @@ vec4 MaterialSpecular=vec4(MaterialSpecular_3,1);
 // de los glcolor, el primero es con luces, el segund sin luces, el tercero es prueba  
 gl_FragColor = ( Emissive + Diffuse + Specular ) * texture2D(u_texture, v_texCoords);
 //gl_FragColor =v_color * texture2D(u_texture, v_texCoords);
-//gl_FragColor = ( Emissive + Diffuse + Specular ) * texture2D(u_texture, v_texCoords);
+//gl_FragColor =  Emissive  * texture2D(u_texture, v_texCoords);
 
-//gl_FragColor = vec4(1,0,0,1);
 
 }
 

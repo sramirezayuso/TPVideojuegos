@@ -63,7 +63,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	DirectionalLight directionalLight;
 	FrameBuffer shadowBuffer;
 	public static final int DEPTHMAPIZE = 1024;
-	private boolean shadows_on=true;
+	private boolean shadows_on=false;
 	private static boolean DEBUGGING_DEPTHMAP=false;
 	
 	
@@ -211,7 +211,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		shaders.add(depthMapper);
 		shaders.add(directional_shadow_shader);
 
-		// objetos de la escena central [LUZ DIRECCIONAL]
+		// objetos de la escena central [SPOTLIGHT]
 		spaceShip1 = new Ship(dataFolder, new Vector3(new float[] { 0f, 0f, 0f }));
 		spaceShip2 = new Ship(dataFolder, new Vector3(new float[] { 1f, 0f, 0f }));
 		objects.add(spaceShip1);
@@ -221,13 +221,13 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		
 		
-		//objetos de la escena derecha [SPOTLIGHT]
+		//objetos de la escena derecha [POINTLIGHT]
 		objects.add(new Ship(dataFolder, new Vector3(new float[] { 2f, 0f, 0f })));
 		objects.add(new Ship(dataFolder, new Vector3(new float[] { 3f, 0f, 0f })));
 		objects.add(new Cube(dataFolder, new Vector3(new float[] { 2f, -0.8f, 0.5f })));
 		
 		
-		//objetos de la escena izquierda [POINTLIGHT]
+		//objetos de la escena izquierda [DIRECTIONAL LIGHT]
 		objects.add(new Ship(dataFolder, new Vector3(new float[] { -1f, 0f, 0f })));
 		objects.add(new Ship(dataFolder, new Vector3(new float[] { -2f, 0f, 0f })));
 		objects.add(new Cube(dataFolder, new Vector3(new float[] { -2f, -0.8f, 0.5f })));
@@ -241,25 +241,30 @@ public class MyGdxGame extends ApplicationAdapter {
 		Vector3 cam_pos = new Vector3(new float[] { 1.75f, 0f, 1f });
 		camera.setPosition(cam_pos);
 
-		// luces
-//		 lights.add(new PointLight(point_light_shaderProgram, new Vector3(new
-//		 float[] { 6f, 1f, 0.1f }), new Vector3(
-//		 new float[] { 1f, 0f, 0f })));
-	
-		 lights.add(new SpotLight(spot_light_shaderProgram, new Vector3(new
-		 float[] { 0f, 10f, 0.2f }), new Vector3(
-		 new float[] { 0f, 1f, 0f }), new Vector3(new float[] { 0f, -0.1f,
-		 0.0f })));
-//		
+		/*
+		 *  luces
+		 */
 		
-//		float x=-0.3f;
-//		float z=-0.8f;
+		lights.add(new SpotLight(spot_light_shaderProgram, new Vector3(new
+				 float[] { 0f, 2f, 0.2f }), new Vector3(
+				 new float[] { 0f, 1f, 0f }), new Vector3(new float[] { 0f, -0.1f,
+				 0.0f })));
+		
+		 lights.add(new PointLight(point_light_shaderProgram, new Vector3(new
+		 float[] { 6f, 1f, 0.1f }), new Vector3(
+		 new float[] { 1f, 0f, 0f })));
+//	
+		 
+//		
+//		
+//		float x=-3.5f;
+//		float z=-0.1f;
 //		directionalLight = new DirectionalLight(directional_shadow_shader,
 //				new Vector3(new float[] { x, 5f, z }), 
 //				new Vector3(new float[] { x, 0f, z }), 
 //				new Vector3(new float[] {1f, 1f, 1f }));
 //		lights.add(directionalLight);
-		// personaje
+//		// personaje
 
 		createCharacter();
 	}
