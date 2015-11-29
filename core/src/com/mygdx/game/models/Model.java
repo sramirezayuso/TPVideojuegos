@@ -105,7 +105,7 @@ public abstract class Model {
 			camera.setParameters(shader);
 			// modelMatrix.mul(viewProjection);
 			if (texture != null)
-				texture.bind();
+				texture.bind(0);
 			shader.setUniformMatrix("u_m", modelMatrix);
 			
 			

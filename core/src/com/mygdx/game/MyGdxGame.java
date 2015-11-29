@@ -63,8 +63,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	DirectionalLight directionalLight;
 	FrameBuffer shadowBuffer;
 	public static final int DEPTHMAPIZE = 1024;
-	private boolean shadows_on=false;
+	private boolean shadows_on=true;
 	private static boolean DEBUGGING_DEPTHMAP=false;
+	
 	
 	private ShaderProgram createShader(String dataFolder, String VSfilename, String FSfilename) {
 		ShaderProgram shader;
@@ -286,6 +287,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		//RENDER DE LUCES
 		if (lights_on) {
 			for (Model model : objects) {
+				
 				model.render(lights, camera, PRIMITIVE_TYPE);
 			}
 		}
@@ -331,7 +333,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		if(!DEBUGGING_DEPTHMAP)
 			shadowBuffer.begin();
 		
-		Gdx.gl.glClearColor(0, 0, 0, 0);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl20.glDisable(GL20.GL_BLEND);
 		for (Model model : objects) {
@@ -344,8 +346,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		shadowBuffer.end();
 		shadowBuffer.getColorBufferTexture().bind(1);
 		
-		Texture tex=shadowBuffer.getColorBufferTexture();
-//		tex.bind(1);
+		
 //
 //		directional_shadow_shader.setUniformf("u_shadowmap",1);
 		}
