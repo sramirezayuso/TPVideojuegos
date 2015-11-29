@@ -305,8 +305,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		if(shadows_on &&! DEBUGGING_DEPTHMAP){
 			//SE PINTAN LAS SOMBRAS
 			for(Model model:objects){
-				
-				model.renderShadow(directional_shadow_shader,directionalLight,camera,PRIMITIVE_TYPE);
+				shadowBuffer.getColorBufferTexture().bind(1);
+				model.renderShadow(directional_shadow_shader
+						,directionalLight
+						,camera
+						,PRIMITIVE_TYPE
+										);
 			}
 		}	
 
@@ -325,22 +329,28 @@ public class MyGdxGame extends ApplicationAdapter {
 			shadowBuffer = new FrameBuffer(Format.RGBA8888, DEPTHMAPIZE, DEPTHMAPIZE, true);
 
 		if(!DEBUGGING_DEPTHMAP)
-		shadowBuffer.begin();
+			shadowBuffer.begin();
 		
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		
+		Gdx.gl20.glDisable(GL20.GL_BLEND);
 		for (Model model : objects) {
 			model.renderShadowMapping(GL20.GL_TRIANGLES, depthMapper, directionalLight);//se guardan las profundidades a la luz
 		}
 		
 		if(!DEBUGGING_DEPTHMAP){
+			//ScreenshotFactory.saveScreenshot(shadowBuffer.getWidth(),shadowBuffer.getHeight(),"testing_depthmap");
+	
 		shadowBuffer.end();
+		
+		
 		Texture tex=shadowBuffer.getColorBufferTexture();
-		tex.bind(1);
-
-		directional_shadow_shader.setUniformf("u_shadowmap",1);
-		}}
+//		tex.bind(1);
+//
+//		directional_shadow_shader.setUniformf("u_shadowmap",1);
+		}
+		Gdx.gl20.glEnable(GL20.GL_BLEND);
+	}
 
 	private void printShaderLog(ShaderProgram shader) {
 		if (shader != null) {

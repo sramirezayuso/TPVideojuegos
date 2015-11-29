@@ -1,5 +1,7 @@
 package com.mygdx.game.lights;
 
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -8,7 +10,7 @@ import com.mygdx.game.cameras.OrthographicProjection;
 
 public class DirectionalLight extends Light {
 
-	float z_near = 0.01f;
+	float z_near = -0.01f;
 	float z_far = 100f;
 
 	public DirectionalLight(ShaderProgram shader, Vector3 m_Position, Vector3 m_Direction, Vector3 light_color) {
@@ -24,12 +26,16 @@ public class DirectionalLight extends Light {
 		shader.setUniformf("spotlightDirection_3", m_SpotDirection);
 	}
 
-	public void setShadowParameters(ShaderProgram shader, Cam cam) {
+	public void setShadowParameters(ShaderProgram shader, Cam cam,Matrix4 modelMatrix) {
 
 		// shader.setUniformf("TRS",m_SpotDirection );
 		Matrix4 VP = getVP();
-
-		shader.setUniformMatrix("u_shadowVP", VP);
+		Matrix4 mvp_light = new Matrix4(modelMatrix);
+		
+		mvp_light.mul(VP);
+		
+		
+		shader.setUniformMatrix("u_mvp_light", mvp_light);
 
 		shader.setUniformf("LightPosW_3", m_Position);
 		// FIX
@@ -65,13 +71,30 @@ public class DirectionalLight extends Light {
 	public Matrix4 getVP() {
 		Matrix4 V = getV();
 		Matrix4 P = OrthographicProjection.getProjection(2, 2, z_far, z_near);
+		
+		//System.out.println(P);
+		Camera aux=new OrthographicCamera();
+		aux.translate(m_Position);
+		aux.lookAt(m_SpotDirection);
+		aux.far=z_far;
+		aux.near=z_near;
+		aux.update();
+		Matrix4 paux=aux.projection;
+				
+				
 		return P.mul(V);
 	}
-
+	//revisado
 	public Matrix4 getV() {
 		// return this.getTR().inv();
 		Vector3 up = new Vector3(new float[] { 0, 1, 0 });
-		return LookAtRH(m_Position, m_SpotDirection, up);
+		Matrix4 m1= LookAtRH(m_Position, m_SpotDirection, up);
+		
+		
+		
+		
+		
+		return m1;
 	}
 
 	public Matrix4 getTR() {
@@ -107,9 +130,14 @@ public class DirectionalLight extends Light {
 
 		// the final view matrix
 
-		Matrix4 W = new Matrix4(new float[] { xaxis.x, xaxis.y, xaxis.z, 0, yaxis.x, yaxis.y, yaxis.z, 0, zaxis.x,
-				zaxis.y, zaxis.z, 0, eye.x, eye.y, eye.z, 1 });
+		Matrix4 W = new Matrix4(new float[] { xaxis.x, xaxis.y, xaxis.z, 0, 
+									yaxis.x, yaxis.y, yaxis.z, 0, 
+									zaxis.x,zaxis.y, zaxis.z, 0, 
+									eye.x, eye.y, eye.z, 1 });
 		return W.inv();
 	}
+	
+	
+		
 
 }

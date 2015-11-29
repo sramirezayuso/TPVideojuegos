@@ -43,20 +43,24 @@ void main()
 {
 	//gl_FragColor = pack(gl_Position.z);//de jorge
 	
+	//vec4 normalized_position=(v_position ) * 0.5+ vec4(0.5,0.5,0.5,5.0);
 	
-	//float intensity=1.0-((v_position.z)/u_cameraFar);
-	vec4 packed1=pack_depth( (v_position.z)*(-1.0));
+	
+	
+	vec4 packed1=pack_depth((-1.0)* v_position.z);
 	float unpacked1=unpack_depth(packed1);
 	
-	//gl_FragColor = unpacked1*vec4(1.0,1.0,1.0,1.0);
+	gl_FragColor = unpacked1*vec4(1.0,1.0,1.0,1.0);
 	//gl_FragColor = pack_depth(normalizedDistance);
 	
 	//gl_FragColor = vec4(0.0,0.0,0.0,0.0);
 	
-	gl_FragColor = pack_depth(v_position.z);
-	//gl_FragColor = ( v_position.z*(-1.0))*vec4(1.0,1.0,1.0,1.0);
-	//gl_FragColor = ( unpacked1)*vec4(1.0,1.0,1.0,1.0);
-		
+	//gl_FragColor = pack_depth(v_position.z);
+	//gl_FragColor = ( v_position.z)*vec4(1.0,1.0,1.0,1.0);
+	
+	
+	//gl_FragColor = packed1;
+	
 }
 
 

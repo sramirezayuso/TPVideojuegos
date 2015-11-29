@@ -34,6 +34,8 @@ public abstract class Model {
 	//render que se emplea para crear el shadow map
 	public void renderShadowMapping(int primitiveType,ShaderProgram shader,DirectionalLight light){
 		shader.begin();
+		
+		getTexture().bind(0);
 		Matrix4 modelMatrix = new Matrix4(getModelMatrix());
 		Matrix4 viewProjection = light.getVP();
 
@@ -62,14 +64,13 @@ public abstract class Model {
 	//render que se emplea para dibujar las sombras
 	public void renderShadow(ShaderProgram shader,DirectionalLight dir_light,Cam cam,int primitiveType){
 		shader.begin();
-		Matrix4 TRS=this.getModelMatrix();
 		
+
+		shader.setUniformi("u_shadowmap",1);
+		Matrix4 mvp_cam = getMVP(cam);
 		
-		shader.setUniformMatrix("TRS", TRS);
-		Matrix4 res = getMVP(cam);
-		
-		shader.setUniformMatrix("u_mvp", res);
-		dir_light.setShadowParameters(shader, cam);
+		shader.setUniformMatrix("u_mvp_cam", mvp_cam);
+		dir_light.setShadowParameters(shader, cam,getModelMatrix());
 		renderMesh(shader, primitiveType);
 		shader.end();
 	}
