@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.g3d.model.data.ModelData;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -67,13 +68,13 @@ public abstract class Model {
 		
 		setShadowParameters(shader, cam);
 		
-		dir_light.setShadowParameters(shader, cam,getModelMatrix());
+		//dir_light.setShadowParameters(shader, cam,getModelMatrix());
 		renderMesh(shader, primitiveType);
 		shader.end();
 	}
 	
 	private void setShadowParameters(ShaderProgram shader,Cam cam){
-		shader.setUniformi("u_shadowmap",1);
+		//shader.setUniformi("u_shadowmap",1);
 		Matrix4 mvp_cam = getMVP(cam);
 		
 		shader.setUniformMatrix("u_mvp_cam", mvp_cam);
@@ -88,14 +89,14 @@ public abstract class Model {
 		return res;
 	}
 	
-	public void render(List<Light> lights, Cam camera, int primitiveType) {
+	public void render(List<Light> lights, Cam camera, int primitiveType,boolean shadows_on, FrameBuffer shadowBuffer) {
 
 		// //iluminacion, se hace una pasada por cada luz
 		for (Light light : lights) {
 			ShaderProgram shader = light.getShader();
 			shader.begin();
 			Matrix4 modelMatrix=getModelMatrix();
-			light.setParameters(modelMatrix,camera);
+			light.setParameters(modelMatrix,camera,shadowBuffer);
 			
 			
 			Texture texture = getTexture();
@@ -109,7 +110,7 @@ public abstract class Model {
 			shader.setUniformMatrix("u_m", modelMatrix);
 			
 			
-			
+			shader.setUniformi("shadows_on",shadows_on?1:0);
 			shader.setUniformMatrix("u_mvp_cam", res);
 			shader.setUniformi("u_texture", 0);
 

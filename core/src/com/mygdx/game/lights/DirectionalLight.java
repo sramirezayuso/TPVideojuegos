@@ -2,6 +2,7 @@ package com.mygdx.game.lights;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -20,15 +21,16 @@ public class DirectionalLight extends Light {
 	}
 
 	@Override
-	public void setParameters(Matrix4 modelMatrix,Cam cam) {
+	public void setParameters(Matrix4 modelMatrix,Cam cam,FrameBuffer shadowbuffer) {
 		// TODO Auto-generated method stub
-		super.setParameters(modelMatrix,cam);
-		shader.setUniformf("spotlightDirection_3", m_SpotDirection);
-		setShadowParameters(shader, cam, modelMatrix);
+		super.setParameters(modelMatrix,cam,shadowbuffer);
+		//shader.setUniformf("spotlightDirection_3", m_SpotDirection);
+		setShadowParameters(shader, cam, modelMatrix,shadowbuffer);
 	}
 
-	public void setShadowParameters(ShaderProgram shader, Cam cam,Matrix4 modelMatrix) {
-
+	public void setShadowParameters(ShaderProgram shader, Cam cam,Matrix4 modelMatrix, FrameBuffer shadowbuffer) {
+		shadowbuffer.getColorBufferTexture().bind(1);
+		shader.setUniformf("u_shadowmap",1);
 		// shader.setUniformf("TRS",m_SpotDirection );
 		Matrix4 VP = getVP();
 		Matrix4 mvp_light = new Matrix4(modelMatrix);

@@ -288,7 +288,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		if (lights_on) {
 			for (Model model : objects) {
 				
-				model.render(lights, camera, PRIMITIVE_TYPE);
+				model.render(lights, camera, PRIMITIVE_TYPE,shadows_on,shadowBuffer);
 			}
 		}
 		
@@ -344,11 +344,11 @@ public class MyGdxGame extends ApplicationAdapter {
 			//ScreenshotFactory.saveScreenshot(shadowBuffer.getWidth(),shadowBuffer.getHeight(),"testing_depthmap");
 	
 		shadowBuffer.end();
-		shadowBuffer.getColorBufferTexture().bind(1);
+		//shadowBuffer.getColorBufferTexture().bind(1);
 		
 		
 //
-//		directional_shadow_shader.setUniformf("u_shadowmap",1);
+	//	directional_shadow_shader.setUniformf("u_shadowmap",1);
 		}
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 	}

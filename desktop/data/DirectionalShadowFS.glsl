@@ -7,6 +7,8 @@ uniform sampler2D u_texture;
 
 
 //iluminacion
+
+uniform bool shadows_on;
 varying vec4 v2f_normalW; 
 varying vec4 v2f_positionW;
 uniform vec3 EyePosW3;   // Eye position in world space.
@@ -40,41 +42,43 @@ vec4 pack_depth(const float value)
 
 float getVisibility(){
 	float ans=1.0;
-	
-//  tenes que comparar f_position.z contra shadowmap distance
- 	vec4 LightPosW=vec4(LightPosW_3,1);
-	
-	
-	float dist=-w_position.z;//distancia entre fragmento y la luz(da negativo para la escena)
-	
-	
-	vec3 shadow_cord = (w_position.xyz ) * 0.5+ vec3(0.5,0.5,0.5); 
-	
-	float shadowmap_distance=unpack_depth(texture2D(u_shadowMap, shadow_cord.xy));
-	
-	
-	
-	float difference=(shadowmap_distance-dist);
-		
-	
-	
-	
-	
-	
-	if(shadow_cord.x>0.0 
-		&& shadow_cord.x<1.0 
-		&& shadow_cord.y>0.0 
-		&& shadow_cord.y<1.0
-		&& !(difference>=0.0 && difference<0.1)){ //esta en la sombra
+	if(shadows_on==true){	
+		//  tenes que comparar f_position.z contra shadowmap distance
+		 	vec4 LightPosW=vec4(LightPosW_3,1);
 			
-			ans=0.5;
-		}
-	else{
-		ans=1.0;
-		}
-	
+			
+			float dist=-w_position.z;//distancia entre fragmento y la luz(da negativo para la escena)
+			
+			
+			vec3 shadow_cord = (w_position.xyz ) * 0.5+ vec3(0.5,0.5,0.5); 
+			
+			float shadowmap_distance=unpack_depth(texture2D(u_shadowMap, shadow_cord.xy));
+			
+			
+			
+			float difference=(shadowmap_distance-dist);
+				
+			
+			
+			
+			
+			
+			if(shadow_cord.x>0.0 
+				&& shadow_cord.x<1.0 
+				&& shadow_cord.y>0.0 
+				&& shadow_cord.y<1.0
+				&& !(difference>0.0 && difference<0.1)){ //esta en la sombra
+					
+					ans=0.5;
+				}
+			else{
+				ans=1.0;
+				}
+			
+			
+		
+			}
 	return ans;
-
 }
 
 void main()

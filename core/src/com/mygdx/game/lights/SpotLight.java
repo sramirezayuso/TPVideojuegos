@@ -1,6 +1,7 @@
 package com.mygdx.game.lights;
 
 import com.badlogic.gdx.graphics.g3d.Shader;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -27,8 +28,8 @@ public class SpotLight extends Light {
     			}
 	
 	@Override
-	public void setParameters(Matrix4 modelMatrix,Cam cam) {
-		super.setParameters(modelMatrix,cam);
+	public void setParameters(Matrix4 modelMatrix,Cam cam,FrameBuffer shadowbuBuffer) {
+		super.setParameters(modelMatrix,cam,shadowbuBuffer);
 		
 		
 		shader.setUniformf("l_spotCutOff",m_SpotCutoff);
