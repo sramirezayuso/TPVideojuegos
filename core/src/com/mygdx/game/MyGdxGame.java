@@ -45,7 +45,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	ModelInstance character_model_instance;
 	boolean isInitialized = false;
 	AssetManager assets;
-	boolean character_animation_on = false;
+	boolean character_animation_on = true;
 	//
 
 	private Cam camera;
@@ -63,7 +63,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	DirectionalLight directionalLight;
 	FrameBuffer shadowBuffer;
 	public static final int DEPTHMAPIZE = 1024;
-	private boolean shadows_on=true;
+	private boolean shadows_on=false;
 	private static boolean DEBUGGING_DEPTHMAP=false;
 	
 	
@@ -324,6 +324,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 			renderCharacter(character_shaderProgram);
 			if (animation_controller != null) {
+				Gdx.gl20.glEnable(GL20.GL_BLEND);
+				Gdx.gl20.glBlendFunc(GL20.GL_ONE, GL20.GL_ONE);
 				updateCharacter(animation_controller);
 
 			}
