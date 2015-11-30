@@ -31,7 +31,9 @@ public abstract class Model {
 
 	}
 
-	
+	public Vector3 getPosition(){
+		return position;
+	}
 	//render que se emplea para crear el shadow map
 	public void renderShadowMapping(int primitiveType,ShaderProgram shader,DirectionalLight light){
 		shader.begin();

@@ -63,10 +63,10 @@ float getVisibility(){
 			
 			
 			
-			if(shadow_cord.x>0.0 
-				&& shadow_cord.x<1.0 
-				&& shadow_cord.y>0.0 
-				&& shadow_cord.y<1.0
+			if(shadow_cord.x>=0.0 
+				&& shadow_cord.x<=1.0 
+				&& shadow_cord.y>=0.0 
+				&& shadow_cord.y<=1.0
 				&& !(difference>0.0 && difference<0.1)){ //esta en la sombra
 					
 					ans=0.5;

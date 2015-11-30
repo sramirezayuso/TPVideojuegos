@@ -59,10 +59,19 @@ public class MyGdxGame extends ApplicationAdapter {
 	private boolean lights_on =true;
 	private Vector3 directional_original_position;
 	private Vector3 directional_current_position;
+	private Vector3 spotlight_original_direction;
+	private Vector3 spotlight_current_direction;
 	private float delta=0.05f;
 	private float limit=3.5f;
-	
-
+	private SpotLight spotlight;
+	private PointLight pointlight;
+	private Vector3 pointlight_original_position;
+	private Vector3 pointlight_current_position;
+	private Vector3 ship1_original_position;
+	private Vector3 ship1_current_position;
+	private Ship ship1;
+	private float delta_ship=0.01f;
+	private float limit_ship=0.2f;
 	// shadows
 	private static final int PRIMITIVE_TYPE= GL20.GL_TRIANGLES;
 	ShaderProgram depthMapper;
@@ -236,7 +245,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		//objetos de la escena izquierda [DIRECTIONAL LIGHT]
 		objects.add(new Ship(dataFolder, new Vector3(new float[] { -1f, 0f, 0f })));
-		objects.add(new Ship(dataFolder, new Vector3(new float[] { -2f, 0f, 0f })));
+		ship1_original_position=new Vector3(new float[] { -2f, 0f, 0f });
+		ship1=new Ship(dataFolder, new Vector3(ship1_original_position));
+		objects.add(ship1);
 		objects.add(new Cube(dataFolder, new Vector3(new float[] { -2f, -0.8f, 0.5f })));
 //		
 		
@@ -252,14 +263,23 @@ public class MyGdxGame extends ApplicationAdapter {
 		 *  luces
 		 */
 		
-		lights.add(new SpotLight(spot_light_shaderProgram, new Vector3(new
-				 float[] { 0f, 2f, 0.2f }), new Vector3(
-				 new float[] { 0f, 1f, 0f }), new Vector3(new float[] { 0f, -0.1f,
-				 0.0f })));
+		spotlight_original_direction=new Vector3(new float[] { 0f, -0.1f,
+				 0.0f });
+		spotlight=new SpotLight(spot_light_shaderProgram, 
+				new Vector3(new
+						 float[] { 1.5f, 2f, 0.2f }), 
+						 new Vector3( new float[] { 0f, 1f, 0f }),
+						 new Vector3(spotlight_original_direction));
+		lights.add(spotlight);
 		
-		 lights.add(new PointLight(point_light_shaderProgram, new Vector3(new
-		 float[] { 6f, 1f, 0.1f }), new Vector3(
-		 new float[] { 1f, 0f, 0f })));
+		
+		
+		pointlight_original_position=new Vector3(new
+				 float[] { 6f, 1f, 0.1f });
+		pointlight=new PointLight(point_light_shaderProgram,
+				new Vector3(pointlight_original_position) ,
+					new Vector3( new float[] { 1f, 0f, 0f }));
+		 lights.add(pointlight);
 //	
 		 
 		
@@ -286,10 +306,35 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		directional_current_position.x+=delta;
 		float displacement=directional_original_position.x-directional_current_position.x;
+		
+		if(spotlight_current_direction==null)
+			spotlight_current_direction=spotlight.getPosition();
+		
+		spotlight_current_direction.x+=delta;
+				
+		
+		if(pointlight_current_position==null)
+			pointlight_current_position=pointlight.getPosition();
+		
+		pointlight_current_position.x+=delta;
+		
+
+		
 		if(Math.abs(displacement)>=limit)
 			delta=-delta;
 		
 		
+	}
+	public void updateShip(){
+		if(ship1_current_position==null)
+			ship1_current_position=ship1.getPosition();
+		
+		ship1_current_position.x+=delta_ship;
+		float displacement=ship1_original_position.x-ship1_current_position.x;
+		
+		if(Math.abs(displacement)>=limit_ship)
+			delta_ship=-delta_ship;
+	
 	}
 	
 	public void changeCamera(Cam cam) {
@@ -369,7 +414,8 @@ public class MyGdxGame extends ApplicationAdapter {
 //		}	
 
 
-		//updateLights();
+		//updateLights(); 
+		updateShip();
 		//LOG DE ERRORES DE SHADERS
 		for (ShaderProgram shader : shaders) {
 			printShaderLog(shader);

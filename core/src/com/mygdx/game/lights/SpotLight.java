@@ -38,4 +38,8 @@ public class SpotLight extends Light {
 		
 	}
 
+	public Vector3 getPosition() {
+		return m_Position;
+	}
+
 }

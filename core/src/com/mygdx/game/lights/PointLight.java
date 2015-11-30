@@ -23,4 +23,8 @@ public  class PointLight extends Light {
          );
 	}
 
+	public Vector3 getPosition() {
+		return m_Position;
+	}
+
 }
