@@ -40,7 +40,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	ShaderProgram directional_light_shaderProgram;
 	// character
 	ShaderProgram character_shaderProgram;
-	Vector3 characterPosition = new Vector3(new float[] { 0f, 0f, -2f });
+	Vector3 characterPosition = new Vector3(new float[] { 0f, 0f, -1f });
 	AnimationController animation_controller;
 	ModelInstance character_model_instance;
 	boolean isInitialized = false;
@@ -53,8 +53,15 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Ship spaceShip1;
 	private Ship spaceShip2;
 	private List<Model> objects = new ArrayList<Model>();
+	
+	//lights
 	private List<Light> lights = new ArrayList<Light>();
 	private boolean lights_on =true;
+	private Vector3 directional_original_position;
+	private Vector3 directional_current_position;
+	private float delta=0.05f;
+	private float limit=3.5f;
+	
 
 	// shadows
 	private static final int PRIMITIVE_TYPE= GL20.GL_TRIANGLES;
@@ -63,7 +70,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	DirectionalLight directionalLight;
 	FrameBuffer shadowBuffer;
 	public static final int DEPTHMAPIZE = 1024;
-	private boolean shadows_on=false;
+	private boolean shadows_on=true;
 	private static boolean DEBUGGING_DEPTHMAP=false;
 	
 	
@@ -257,18 +264,34 @@ public class MyGdxGame extends ApplicationAdapter {
 		 
 		
 		
-		float x=-3.5f;
-		float z=-0.1f;
-		directionalLight = new DirectionalLight(directional_shadow_shader,
-				new Vector3(new float[] { x, 5f, z }), 
-				new Vector3(new float[] { x, 0f, z }), 
+		float x_directional=-3.5f;
+		float z_directional=-0.1f;
+		directional_original_position=new Vector3(new float[] { x_directional, 5f, z_directional });
+		directionalLight = new DirectionalLight(
+				directional_shadow_shader,
+				new Vector3(directional_original_position), 
+				new Vector3(new float[] { x_directional, 0f, z_directional }), 
 				new Vector3(new float[] {1f, 1f, 1f }));
+		
 		lights.add(directionalLight);
 //		// personaje
 
 		createCharacter();
 	}
 
+	private void updateLights(){
+		
+		if(directional_current_position==null)
+			directional_current_position=directionalLight.getPosition();
+		
+		directional_current_position.x+=delta;
+		float displacement=directional_original_position.x-directional_current_position.x;
+		if(Math.abs(displacement)>=limit)
+			delta=-delta;
+		
+		
+	}
+	
 	public void changeCamera(Cam cam) {
 		if (cam != null) {
 			multiplexer.removeProcessor(cam);// se quita el listener para camara
@@ -289,6 +312,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
+		
 		
 		if(shadows_on){
 		//SE CREA EL SHADOW MAP
@@ -345,7 +369,7 @@ public class MyGdxGame extends ApplicationAdapter {
 //		}	
 
 
-		
+		//updateLights();
 		//LOG DE ERRORES DE SHADERS
 		for (ShaderProgram shader : shaders) {
 			printShaderLog(shader);

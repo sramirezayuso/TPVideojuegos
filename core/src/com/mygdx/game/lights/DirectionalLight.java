@@ -77,14 +77,14 @@ public class DirectionalLight extends Light {
 		Matrix4 P = OrthographicProjection.getProjection(2, 2, z_far, z_near);
 		
 		//System.out.println(P);
-		Camera aux=new OrthographicCamera();
-		aux.translate(m_Position);
-		aux.lookAt(m_SpotDirection);
-		aux.far=z_far;
-		aux.near=z_near;
-		aux.update();
-		Matrix4 paux=aux.projection;
-				
+//		Camera aux=new OrthographicCamera();
+//		aux.translate(m_Position);
+//		aux.lookAt(m_SpotDirection);
+//		aux.far=z_far;
+//		aux.near=z_near;
+//		aux.update();
+//		Matrix4 paux=aux.projection;
+//				
 				
 		return P.mul(V);
 	}
@@ -94,7 +94,7 @@ public class DirectionalLight extends Light {
 		Vector3 up = new Vector3(new float[] { 0, 1, 0 });
 		Matrix4 m1= LookAtRH(m_Position, m_SpotDirection, up);
 		
-		
+	
 		
 		
 		
@@ -139,6 +139,10 @@ public class DirectionalLight extends Light {
 									zaxis.x,zaxis.y, zaxis.z, 0, 
 									eye.x, eye.y, eye.z, 1 });
 		return W.inv();
+	}
+
+	public Vector3 getTarget() {
+		return m_SpotDirection;
 	}
 	
 	
