@@ -15,7 +15,7 @@ public class Cam implements InputProcessor {
 	
 	protected final static float z_far = 100;
 	
-	protected final static float z_near = 0.001f;
+	protected final static float z_near = 0.1f;
 	//protected Vector3 up = new Vector3(new float[] { 0f, 1f, 0f });
 
 	protected Vector3 lookAtVector;

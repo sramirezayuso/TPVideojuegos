@@ -1,17 +1,18 @@
 package com.mygdx.game.cameras;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Matrix4;
 import com.mygdx.game.MyGdxGame;
 
 //Gdx.graphics.getWidth()
 public class Perspective extends Cam {
 	private static float aspectRatio=Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
-	private static final float FOVy = 60.0f;
+	private static final float FOVy = 67.0f;
 	
 	private static float FOVx = FOVy * aspectRatio;
 
-	private static Matrix4 projection = null;
+	private  Matrix4 projection = null;
 
 	public Perspective(MyGdxGame app) {
 		super(app);
@@ -32,7 +33,7 @@ public class Perspective extends Cam {
 
 			
 		}
-
+		
 		
 		
 		return projection;

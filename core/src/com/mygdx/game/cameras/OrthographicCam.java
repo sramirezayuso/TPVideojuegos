@@ -6,7 +6,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MyGdxGame;
 
 public class OrthographicCam extends Cam {
-	
+	private static float width = 2;
+	private static float height = 2;
 
 	public OrthographicCam(MyGdxGame app) {
 		super(app);
@@ -32,8 +33,7 @@ public class OrthographicCam extends Cam {
 	};
 	@Override
 	protected Matrix4 getProjection() {
-		float width = 2;
-		float height = 2;
+		
 		
 
 //		Matrix4 ans = new Matrix4(new float[] { 1 / width, 0, 0, 0,
