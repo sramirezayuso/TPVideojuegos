@@ -13,7 +13,7 @@ public class Cam implements InputProcessor {
 	protected Vector3 camPosition;
 	
 	
-	protected final static float z_far = 1000;
+	protected final static float z_far = 100;
 	
 	protected final static float z_near = 0.001f;
 	//protected Vector3 up = new Vector3(new float[] { 0f, 1f, 0f });
@@ -75,12 +75,12 @@ public class Cam implements InputProcessor {
 	 * mvp representa la combinación (multiplicación) de P*V*T*R*S
 	 */
 	public Matrix4 getVP() {
-		Matrix4 p = this.getProjection();
+		Matrix4 p = new Matrix4(getProjection());
 		// Matrix4 v = LookAtRH(camPosition, lookAtVector, up);
 		// float pitch = x_rot / Gdx.graphics.getWidth();
 		// float yaw = y_rot / Gdx.graphics.getHeight();
 
-		Matrix4 v = this.getTR().inv();
+		Matrix4 v = getV();
 
 		// FPSViewRH(camPosition, pitch, yaw);
 

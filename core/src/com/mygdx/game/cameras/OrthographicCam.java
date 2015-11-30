@@ -12,6 +12,7 @@ public class OrthographicCam extends Cam {
 		super(app);
 	}
 
+	private Matrix4 projection=null;
 	@Override
 	protected void changeCamera() {
 		Cam newCamera=new Perspective(this.application);
@@ -41,8 +42,10 @@ public class OrthographicCam extends Cam {
 //												0, 0,-(z_far + z_near) / (z_far - z_near), 1 });
 //
 //		
-
-		return OrthographicProjection.getProjection(width, height, z_far, z_near);
+		if(projection==null)
+			projection=OrthographicProjection.getProjection(width, height, z_far, z_near);
+		
+		return projection;
 	}
 
 	
