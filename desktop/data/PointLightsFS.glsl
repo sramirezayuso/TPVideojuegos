@@ -29,6 +29,8 @@ vec4 MaterialDiffuse= vec4(MaterialDiffuse_3,1);
 vec4 MaterialSpecular=vec4(MaterialSpecular_3,1);
 	
 	
+	gl_FragColor = v_color + texture2D(u_texture, v_texCoords);
+	
 	// Compute the emissive term.
     vec4 Emissive = MaterialEmissive;
  	
@@ -48,7 +50,7 @@ vec4 MaterialSpecular=vec4(MaterialSpecular_3,1);
 
 
 // de los glcolor, el primero es con luces, el segund sin luces, el tercero es prueba  
-gl_FragColor = ( Emissive + Diffuse + Specular ) * texture2D(u_texture, v_texCoords);
+gl_FragColor = ( Emissive + Diffuse + Specular ) * gl_FragColor;
 //gl_FragColor =v_color * texture2D(u_texture, v_texCoords);
 //gl_FragColor =  Emissive  * texture2D(u_texture, v_texCoords);
 

@@ -63,7 +63,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	DirectionalLight directionalLight;
 	FrameBuffer shadowBuffer;
 	public static final int DEPTHMAPIZE = 1024;
-	private boolean shadows_on=false;
+	private boolean shadows_on=true;
 	private static boolean DEBUGGING_DEPTHMAP=false;
 	
 	
@@ -255,15 +255,15 @@ public class MyGdxGame extends ApplicationAdapter {
 		 new float[] { 1f, 0f, 0f })));
 //	
 		 
-//		
-//		
-//		float x=-3.5f;
-//		float z=-0.1f;
-//		directionalLight = new DirectionalLight(directional_shadow_shader,
-//				new Vector3(new float[] { x, 5f, z }), 
-//				new Vector3(new float[] { x, 0f, z }), 
-//				new Vector3(new float[] {1f, 1f, 1f }));
-//		lights.add(directionalLight);
+		
+		
+		float x=-3.5f;
+		float z=-0.1f;
+		directionalLight = new DirectionalLight(directional_shadow_shader,
+				new Vector3(new float[] { x, 5f, z }), 
+				new Vector3(new float[] { x, 0f, z }), 
+				new Vector3(new float[] {1f, 1f, 1f }));
+		lights.add(directionalLight);
 //		// personaje
 
 		createCharacter();
@@ -285,10 +285,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		Gdx.gl.glDepthFunc(GL20.GL_LESS);
+		
+		
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		Gdx.gl20.glEnable(GL20.GL_BLEND);
-
+		Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
+		
 		if(shadows_on){
 		//SE CREA EL SHADOW MAP
 		createShadowBuffer();
@@ -308,9 +309,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		//RENDER DE LUCES
 		if (lights_on) {
 			for (Model model : objects) {
-				
+				Gdx.gl20.glEnable(GL20.GL_BLEND);
+				Gdx.gl20.glBlendFunc(GL20.GL_ONE, GL20.GL_ONE);
 				model.render(lights, camera, PRIMITIVE_TYPE,shadows_on,shadowBuffer);
 			}
+			
+			//Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
+
 		}
 		
 		//RENDER DE PERSONAJE
@@ -373,6 +378,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	//	directional_shadow_shader.setUniformf("u_shadowmap",1);
 		}
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
+		Gdx.gl20.glBlendFunc(GL20.GL_ONE, GL20.GL_ONE);
 	}
 
 	private void printShaderLog(ShaderProgram shader) {

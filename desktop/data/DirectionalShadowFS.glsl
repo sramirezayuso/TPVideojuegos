@@ -89,6 +89,7 @@ vec4 LightColor=vec4 (LightColor_3,1);
 vec4 MaterialSpecular=vec4(MaterialSpecular_3,1);
 vec4 MaterialDiffuse= vec4(MaterialDiffuse_3,1);	
 
+gl_FragColor = v_color + texture2D(u_texture, v_texCoords);	
 
 //http://www.lighthouse3d.com/tutorials/glsl-tutorial/directional-lights-per-pixel/
 
@@ -112,7 +113,8 @@ vec4 MaterialDiffuse= vec4(MaterialDiffuse_3,1);
     }
     
   	 float visibility=getVisibility();
-   gl_FragColor = (visibility*intensity *  MaterialDiffuse + spec)* texture2D(u_texture, v_texCoords);
+   gl_FragColor = (visibility*intensity *  MaterialDiffuse + spec)* gl_FragColor ;	
+   ;
 
  
 	
